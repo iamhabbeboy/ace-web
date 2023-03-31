@@ -1,16 +1,24 @@
-import React from 'react';
-import './index.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Error404Page from './pages/Error404Page';
+import HomePage from './pages/HomePage';
+import  DashboardHomePage from './pages/dashboard/HomePage';
+import AccountTypeSelectionPage from './pages/AccountTypeSelectionPage';
+import NewExamProjectPage from './pages/dashboard/NewExamProject';
 
 function App() {
   return (
-    <div className='mx-auto py-20 text-center container'>
-      <div className='w-5/12 mx-auto'>
-      <h1 className='text-5xl'>Welcome to aceTest</h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab pariatur nisi quia harum aut? Pariatur porro blanditiis dignissimos, non totam veniam!</p>
-      <p>&nbsp;</p>
-      <button className='bg-gray-200 px-7 py-2 rounded-md font-bold hover:bg-gray-300'>Login</button>
-      </div>  
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="/onboarding/account-type" element={<AccountTypeSelectionPage />} />
+          <Route path="/home" element={<DashboardHomePage />} />
+          <Route path="/exams/new" element={<NewExamProjectPage />} />
+          <Route path="*" element={<Error404Page />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+
   );
 }
 

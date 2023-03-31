@@ -4,14 +4,33 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import { MantineProvider } from '@mantine/core';
 
+const elem = document.getElementById('root') as HTMLElement
+elem.style.backgroundColor = "#f0f1f580";
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  elem
 );
 root.render(
-  <React.StrictMode>
+  <MantineProvider withGlobalStyles withNormalizeCSS
+  theme={{
+    components: {
+      Container: {
+        defaultProps: {
+          sizes: {
+            xs: 540,
+            sm: 720,
+            md: 960,
+            lg: 1140,
+            xl: 1320,
+          },
+        },
+      },
+    }
+  }}
+  >
     <App />
-  </React.StrictMode>
+  </MantineProvider>
 );
 
 // If you want your app to work offline and load faster, you can change
