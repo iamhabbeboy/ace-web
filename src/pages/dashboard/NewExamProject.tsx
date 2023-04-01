@@ -1,4 +1,4 @@
-import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Slider, Divider, Select, UnstyledButton } from '@mantine/core';
+import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';

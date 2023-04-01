@@ -1,4 +1,4 @@
-import { Avatar, Burger, Center, Container, createStyles, Group, Header, Menu, rem } from "@mantine/core"
+import { Avatar, Center, Container, createStyles, Group, Header, Menu, rem } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
