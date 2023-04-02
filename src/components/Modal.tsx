@@ -1,4 +1,4 @@
-import { Modal, Button, Group, createStyles } from '@mantine/core';
+import { Modal } from '@mantine/core';
 
 interface ModalProps {
   children: React.ReactNode;
@@ -7,13 +7,13 @@ interface ModalProps {
   close: () => void;
 }
 
-const useStyle = createStyles((theme) => ({
-  ".mantine-Modal-title": {
-    fontWeight: "bold"
-  }
-}));
+// const useStyle = createStyles((theme) => ({
+//   ".mantine-Modal-title": {
+//     fontWeight: "bold"
+//   }
+// }));
 const ModalView = ({ children, opened, close, title }: ModalProps) => {
-  const { classes } = useStyle();
+  // const { classes } = useStyle();
   return (
     <>
       <Modal opened={opened} onClose={close} title={title}>

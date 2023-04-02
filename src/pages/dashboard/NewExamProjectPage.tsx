@@ -1,9 +1,10 @@
-import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton } from '@mantine/core';
+import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton, MultiSelect } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import ModalView from '../../components/Modal';
 import { useDisclosure } from '@mantine/hooks';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -24,12 +25,17 @@ const useStyles = createStyles((theme) => ({
 const NewProjectPage = () => {
     const { classes } = useStyles();
     const [opened, { open, close }] = useDisclosure(false);
+    const navigate = useNavigate();
+    const handleSubmitAction = () => {
+        navigate('/exams/c123-34323-34234x/questions');
+    }
 
     return (
         <>
             <MenuNavBar />
             <Container size={"sm"}>
                 <div className={classes.section}>
+                    <h1>Setup Exam Project </h1>
                     <Text size={"sm"} >Project name</Text>
                     <Input placeholder="Enter project Name here" radius="md" mb={"md"} size={"md"} />
                     <Text size={"sm"} >Project description</Text>
@@ -56,10 +62,10 @@ const NewProjectPage = () => {
                         ]}
                     />
                     <Group position={"apart"}>
-                        <Text  size={"sm"}>Select Subject </Text>
-                        <UnstyledButton style={{"fontSize": "13px", "color": "#666", "textDecoration": "underline"}} onClick={open}>[Add subject]</UnstyledButton>
+                        <Text size={"sm"}>Select Subject </Text>
+                        <UnstyledButton style={{ "fontSize": "13px", "color": "#666", "textDecoration": "underline" }} onClick={open}>[Add subject]</UnstyledButton>
                     </Group>
-                    <Select
+                    <MultiSelect
                         placeholder="Subject name"
                         searchable
                         mb={"md"}
@@ -71,12 +77,12 @@ const NewProjectPage = () => {
                 </div>
                 <Group position="right">
                     <Button mt={"md"} size={"md"} variant="outline"><IconChevronLeft />Cancel </Button>
-                    <Button mt={"md"} size={"md"}>Create Project <IconChevronRight /></Button>
+                    <Button mt={"md"} size={"md"} onClick={handleSubmitAction}>Create Project <IconChevronRight /></Button>
                 </Group>
                 <ModalView opened={opened} close={close} title="Add Subject">
                     <Input placeholder="Enter subject Name here" radius="md" mb={"md"} size={"md"} />
                     {/* <Group position="right"> */}
-                        <Button>Continue <IconChevronRight /></Button>
+                    <Button>Continue <IconChevronRight /></Button>
                     {/* </Group> */}
                 </ModalView>
             </Container>

@@ -1,5 +1,6 @@
-import { Avatar, Center, Container, createStyles, Group, Header, Menu, rem } from "@mantine/core"
+import { Avatar, Center, Container, createStyles, Group, Header, Menu, rem, UnstyledButton } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -36,12 +37,17 @@ const useStyles = createStyles((theme) => ({
 
 const MenuNavBar = () => {
     const { classes } = useStyles();
+    const router = useNavigate()
+
+    const handleHomeLink = () => {
+        router("/home")
+    }
 
     return (
-        <Header height={56} mb={120}>
+        <Header height={56} mb={20}>
             <Container size={"xl"}>
                 <div className={classes.inner}>
-                    Logo
+                    <UnstyledButton onClick={handleHomeLink}>Logo</UnstyledButton>
                     <Group spacing={5}>
                         <a
                             href={"/"}

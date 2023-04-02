@@ -2,7 +2,7 @@ import { Button, Container, createStyles, Image, rem } from "@mantine/core"
 import MenuNavBar from "../../components/MenuNavBar"
 import emptyImage from "../../assets/empty-exam-image.svg"
 import Footer from "../../components/Footer"
-import { useNavigate, useRoutes } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const useStyles = createStyles((theme) => ({
     section: {
