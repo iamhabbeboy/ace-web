@@ -13,6 +13,7 @@
     "@mantine/notifications": "^6.0.5",
     "@mantine/nprogress": "^6.0.5",
     "@mantine/tiptap": "^6.0.5",
+    "@reduxjs/toolkit": "^1.9.3",
     "@tabler/icons-react": "^2.13.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -75,5 +76,8 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/redux-logger": "^3.0.9",
+    "redux-logger": "^3.0.6"
+  }
 }

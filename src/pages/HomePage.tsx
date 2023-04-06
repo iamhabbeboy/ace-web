@@ -1,5 +1,8 @@
 import { Button, Container, Group, rem } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import { store } from '../store';
+import { createUser, getUser } from '../store/thunks/user';
 
 const HomePage = () => {
   return (
@@ -14,15 +17,21 @@ const HomePage = () => {
 }
 
 function SignInButton() {
+  const navigation = useNavigate()
+  const handleUserLogin = async () => {
+    navigation('/home')
+    // const result = await store.dispatch(getUser({id: '123'}));
+    // console.log(result)
+  }
   return (
     <Group position="left">
       <Button
         component="a"
         target="_blank"
         rel="noopener noreferrer"
-        href="https://twitter.com/mantinedev"
         leftIcon={<IconBrandGoogle size={rem(18)} />}
         variant="default"
+        onClick={handleUserLogin}
       >
         Sign In With Google
       </Button>
