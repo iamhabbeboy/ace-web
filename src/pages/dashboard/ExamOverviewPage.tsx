@@ -3,7 +3,6 @@ import { createStyles, Navbar, getStylesRef, rem, Container, Grid } from '@manti
 import {
     IconSettings,
     IconSwitchHorizontal,
-    IconLogout,
     IconUsersGroup,
     IconEdit,
     IconDatabaseExport,
@@ -11,7 +10,9 @@ import {
 } from '@tabler/icons-react';
 import MenuNavBar from '../../components/MenuNavBar';
 import Footer from '../../components/Footer';
-import TableSelection from '../../components/Table';
+import StudentView from '../../components/overview/Student';
+import Overview from '../../components/overview/Overview';
+
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -73,16 +74,28 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const data = [
-    { link: '', label: 'Overview', icon: IconReportAnalytics },
-    { link: '', label: 'Result', icon: IconDatabaseExport },
-    { link: '', label: 'Students', icon: IconUsersGroup },
-    { link: '', label: 'Questions', icon: IconEdit },
-    { link: '', label: 'Other Settings', icon: IconSettings },
+    { link: '', label: 'Overview', icon: IconReportAnalytics, component: "Overview" },
+    { link: '', label: 'Result', icon: IconDatabaseExport, component: "StudentView" },
+    { link: '', label: 'Students', icon: IconUsersGroup, component: "StudentView" },
+    { link: '', label: 'Questions', icon: IconEdit, component: "StudentView" },
+    { link: '', label: 'Other Settings', icon: IconSettings, component: "StudentView" },
 ];
 
 const ExamOverviewPage = () => {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Billing');
+
+    const [view, setView] = useState({component: "Overview", props: {}})
+    const components = {
+        "Overview": Overview,
+        "StudentView": StudentView
+    }
+
+    const renderTabView = () => {
+        const Component = components[view.component as keyof typeof components]
+        return <Component />
+    }
+
 
     const links = data.map((item) => (
         <a
@@ -91,6 +104,7 @@ const ExamOverviewPage = () => {
             key={item.label}
             onClick={(event) => {
                 event.preventDefault();
+                setView({ component: item.component, props: {}})
                 setActive(item.label);
             }}
         >
@@ -102,7 +116,7 @@ const ExamOverviewPage = () => {
     return (
         <>
             <MenuNavBar />
-            <Container size={"xl"} >
+            <Container size={"xl"}>
                 <Grid>
                     <Grid.Col span={3}>
                         <Navbar height={700} width={{ sm: 300 }} p="md">
@@ -114,27 +128,11 @@ const ExamOverviewPage = () => {
                                     <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
                                     <span>Upgrade Account</span>
                                 </a>
-
-                                <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-                                    <IconLogout className={classes.linkIcon} stroke={1.5} />
-                                    <span>Logout</span>
-                                </a>
                             </Navbar.Section>
                         </Navbar>
                     </Grid.Col>
-                    <Grid.Col span={8}>
-                        <div className={classes.section}>
-                            <h3>Students</h3>
-                            <TableSelection
-                            data={[{
-                                name: "John Doe",
-                                job: "Web Developer",
-                                id: "1234",
-                                email: "john.doe@gmail.com",
-                                avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
-                            }]}
-                            />
-                        </div>
+                    <Grid.Col span={9}>
+                        {renderTabView()}
                     </Grid.Col>
                 </Grid>
             </Container>

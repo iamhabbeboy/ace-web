@@ -11,63 +11,57 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface TableSelectionProps {
-  data: { avatar: string; name: string; email: string; job: string; id: string }[];
+  data: {
+    hasCheckBox?: boolean;
+    name?: string;
+    email?: string;
+    id: string;
+  }[];
 }
 
-const TableSelection = ({ data }: TableSelectionProps) => {
+const TableSelection = ({ data }: any) => {
   const { classes, cx } = useStyles();
   const [selection, setSelection] = useState(['1']);
-  const toggleRow = (id: string) =>
-    setSelection((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
-    );
-  const toggleAll = () =>
-    setSelection((current) => (current.length === data.length ? [] : data.map((item) => item.id)));
-
-  const rows = data.map((item) => {
-    const selected = selection.includes(item.id);
-    return (
-      <tr key={item.id} className={cx({ [classes.rowSelected]: selected })}>
-        <td>
-          <Checkbox
-            checked={selection.includes(item.id)}
-            onChange={() => toggleRow(item.id)}
-            transitionDuration={0}
-          />
-        </td>
-        <td>
-          <Group spacing="sm">
-            <Avatar size={26} src={item.avatar} radius={26} />
-            <Text size="sm" weight={500}>
-              {item.name}
-            </Text>
-          </Group>
-        </td>
-        <td>{item.email}</td>
-        <td>{item.job}</td>
-      </tr>
-    );
+  const rows: any = [], headers: any = [];
+  data.map((item: any) => {
+    rows.push(Object.values(item))
+    headers.push(Object.keys(item))
   });
 
   return (
     <ScrollArea>
-      <Table miw={800} verticalSpacing="sm">
+      <Table verticalSpacing="sm">
         <thead>
           <tr>
             <th style={{ width: rem(40) }}>
               <Checkbox
-                onChange={toggleAll}
+                // onChange={toggleAll}
                 checked={selection.length === data.length}
                 indeterminate={selection.length > 0 && selection.length !== data.length}
                 transitionDuration={0}
               />
             </th>
-            <th>User</th>
-            <th>Email</th>
-            <th>Job</th>
+            {headers[0].map((row: any, index: number) => {
+              return (
+                <th key={index}>{row.toUpperCase()}</th>
+              )
+            })}
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        <tbody>
+          {rows.map((row: any, index: number) => {
+            return (
+              <tr>
+                <td><Checkbox /></td>
+                {Object.values(row).map((row: any, index: number) => {
+                  return (
+                    <td key={index}>{row}</td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
       </Table>
     </ScrollArea>
   );
