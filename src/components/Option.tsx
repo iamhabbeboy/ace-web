@@ -7,11 +7,12 @@ interface OptionProps {
 
 const Option = ({ label }: OptionProps) => {
     return (
-        <Group mt={10}>
-            <Text>({label})</Text>
-            <Radio label="" />
+        <div style={{ marginTop: "15px" }}>
+            <Group mt={5}>
+                <Text>({label})</Text>
+            </Group>
             <QuestionRichTextEditor content="" />
-        </Group>
+        </div>
     )
 }
 export default Option;

@@ -32,7 +32,7 @@ const DashboardHomePage = () => {
     return (
         <>
             <MenuNavBar />
-            <Container size={"xl"} className={classes.section}>
+            <Container size={"xl"} className={classes.section} mt={130}>
                 <div className={classes.noexam}>
                     <Image width={"600px"} src={emptyImage} alt="Random image" />
                     <h3>You currently have no exams</h3>

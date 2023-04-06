@@ -1,12 +1,9 @@
-import { Button, Text, Container, createStyles, Input, rem, Group, Select } from '@mantine/core';
+import { Container, createStyles, rem, Grid, Navbar, getStylesRef, Badge } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
-import { IconChevronLeft, IconChevronRight, IconCirclePlus } from '@tabler/icons-react';
-import ModalView from '../../components/Modal';
-import { useDisclosure } from '@mantine/hooks';
-import QuestionRichTextEditor from '../../components/QuestionRichTextEditor';
-import Option from '../../components/Option';
+import AddQuestion from '../../components/AddQuestionTab';
 import { useState } from 'react';
+import SubjectTab from '../../components/SubjectTab';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -22,64 +19,77 @@ const useStyles = createStyles((theme) => ({
         marginLeft: "auto",
         display: "grid",
         placeItems: "center",
-    }
+    },
+    link: {
+        ...theme.fn.focusStyles(),
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        fontSize: theme.fontSizes.sm,
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
+        padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+        borderRadius: theme.radius.sm,
+        fontWeight: 500,
+
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+
+            [`& .${getStylesRef('icon')}`]: {
+                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+            },
+        },
+    },
 }));
 
 const NewQuestionPage = () => {
     const { classes } = useStyles();
-    const [opened, { open, close }] = useDisclosure(false);
-    const [options, setOptions] = useState(1);
+    const [view, setView] = useState({component: "AddQuestion", props: {subject: ""}})
+    const components = {
+        "AddQuestion": AddQuestion,
+        "Subject": SubjectTab
+    }
 
-    const handleCreateOption = () => {
-        setOptions(options + 1);
+    const handleView = (e: any, component: string, subject: string) => {
+        e.preventDefault();
+        setView({ component: component, props: {subject: subject}})
+    }
+
+    const renderTabView = () => {
+        const Component = components[view.component as keyof typeof components]
+        return <Component subject={view.props.subject}/>
     }
 
     return (
         <>
             <MenuNavBar />
-            <Container size={"sm"}>
-                {/* <UnstyledButton><IconArrowLeft /> <span>Back</UnstyledButton> */}
-                <div className={classes.section}>
-                    <h1>Add Questions </h1>
-
-                    <Text size={"sm"} mt={15} weight="bold">Subject</Text>
-                    <Select
-                        data={[{
-                            label: "English",
-                            value: "English"
-                        }, {
-                            label: "Mathematics",
-                            value: "Mathematics"
-                        }]}
-                    />
-                    <Text size={"sm"} mt={15} weight="bold">Question</Text>
-                    <QuestionRichTextEditor content="" />
-                    <Text size={"sm"} mt={15} weight="bold">Options </Text>
-                    <Group position="apart" mt={0}>
-                        <Select
-                            label="Select Correct Answer"
-                            data={[{
-                                label: "A",
-                                value: "A"
-                            }]}
-                        />
-                        <Button size={"xs"} onClick={handleCreateOption}>Add New <IconCirclePlus /></Button>
-                    </Group>
-                    {Array.from(Array(options), (option, index) => {
-                        return <Option label={index + "_A"} />
-                    })}
-
-                </div>
-                <Group position="right">
-                    <Button mt={"md"} size={"md"} variant="outline"><IconChevronLeft />Cancel </Button>
-                    <Button mt={"md"} size={"md"}>Submit <IconChevronRight /></Button>
-                </Group>
-                <ModalView opened={opened} close={close} title="Add Subject">
-                    <Input placeholder="Enter subject Name here" radius="md" mb={"md"} size={"md"} />
-                    {/* <Group position="right"> */}
-                    <Button>Continue <IconChevronRight /></Button>
-                    {/* </Group> */}
-                </ModalView>
+            <Container size={"xl"} >
+                <Grid>
+                    <Grid.Col span={3}>
+                        <Navbar height={700} width={{ sm: 300 }} p="md">
+                            <Navbar.Section grow>
+                                <h5>Subjects</h5>
+                                <span className={classes.link} onClick={(event) => handleView(event, "AddQuestion", "")}>
+                                    <span>Add Question</span> {" "}
+                                </span>
+                                <span className={classes.link} onClick={(event) =>  handleView(event, "Subject", "English")}>
+                                    <span>English</span> {" "}
+                                    <Badge>1</Badge>
+                                </span>
+                                <span className={classes.link} onClick={(event) => handleView(event, "Subject", "Mathematics")}>
+                                    <span>Mathematics</span> {" "}
+                                    <Badge>15</Badge>
+                                </span>
+                            </Navbar.Section>
+                        </Navbar>
+                    </Grid.Col>
+                    <Grid.Col span={8}>
+                        <div className={classes.section}>
+                           {renderTabView()}
+                        </div>
+                    </Grid.Col>
+                </Grid>
             </Container>
             <Footer />
         </>
