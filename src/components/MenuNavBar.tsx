@@ -1,6 +1,8 @@
 import { Avatar, Center, Container, createStyles, Group, Header, Menu, rem, UnstyledButton } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -38,6 +40,13 @@ const useStyles = createStyles((theme) => ({
 const MenuNavBar = () => {
     const { classes } = useStyles();
     const router = useNavigate()
+    const user = useSelector((state: RootState) => state.account.user)
+    const name = user ? user.data.first_name : "N/A";
+    const avatar = user ? user.data.avatar: "";
+
+    const handleLogout = () => {
+        router("/")
+    }
 
     const handleHomeLink = () => {
         router("/home")
@@ -71,15 +80,15 @@ const MenuNavBar = () => {
                                     onClick={(event) => event.preventDefault()}
                                 >
                                     <Center>
-                                        <Avatar alt="" mr={"xs"} src={"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"} radius="xl" size={"sm"}/>
-                                        <span> {"Account"}</span>
+                                        <Avatar alt="" mr={"xs"} src={avatar} radius="xl" size={"sm"}/>
+                                        <span> {name}</span>
                                         <IconChevronDown size="0.9rem" stroke={1.5} />
                                     </Center>
                                 </a>
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item>Setting</Menu.Item>
-                                <Menu.Item>Logout</Menu.Item>
+                                <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                     </Group>

@@ -6,7 +6,7 @@ import reducer from "./collections"
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
-  devTools: true,
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 export type AppDispatch = typeof store.dispatch;

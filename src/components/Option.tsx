@@ -1,4 +1,4 @@
-import { Group, Radio, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import QuestionRichTextEditor from "./QuestionRichTextEditor";
 
 interface OptionProps {

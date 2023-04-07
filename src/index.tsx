@@ -5,6 +5,9 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { MantineProvider } from '@mantine/core';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { Notifications } from '@mantine/notifications';
 
 const elem = document.getElementById('root') as HTMLElement
 elem.style.backgroundColor = "#f0f1f580";
@@ -12,25 +15,28 @@ const root = ReactDOM.createRoot(
   elem
 );
 root.render(
-  <MantineProvider withGlobalStyles withNormalizeCSS
-  theme={{
-    components: {
-      Container: {
-        defaultProps: {
-          sizes: {
-            xs: 540,
-            sm: 720,
-            md: 960,
-            lg: 1140,
-            xl: 1320,
+  <Provider store={store}>
+    <MantineProvider withGlobalStyles withNormalizeCSS
+      theme={{
+        components: {
+          Container: {
+            defaultProps: {
+              sizes: {
+                xs: 540,
+                sm: 720,
+                md: 960,
+                lg: 1140,
+                xl: 1320,
+              },
+            },
           },
-        },
-      },
-    }
-  }}
-  >
-    <App />
-  </MantineProvider>
+        }
+      }}
+    >
+      <Notifications />
+      <App />
+    </MantineProvider>
+  </Provider>
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -2,7 +2,7 @@ import { Button, Container, Group, rem } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { store } from '../store';
-import { createUser, getUser } from '../store/thunks/user';
+import { createUser } from '../store/thunks/user';
 
 const HomePage = () => {
   return (
@@ -19,8 +19,25 @@ const HomePage = () => {
 function SignInButton() {
   const navigation = useNavigate()
   const handleUserLogin = async () => {
+    await store.dispatch(createUser({
+      first_name: "Abiodun",
+      last_name: "Azeez",
+      id: '0000000000',
+      avatar: '',
+      oauth_user_id: '1234567890',
+      email: 'iamhabbeboy@gmail.com',
+      companies: [{
+        name: "Bashlabs",
+        logo: "https://bashlabs.com/wp-content/uploads/2020/09/cropped-BashLabs-Logo-1.png",
+        description: "",
+      }],
+      username: '',
+      password: '',
+      created_at: '',
+      updated_at: ''
+    }));
+
     navigation('/home')
-    // const result = await store.dispatch(getUser({id: '123'}));
     // console.log(result)
   }
   return (

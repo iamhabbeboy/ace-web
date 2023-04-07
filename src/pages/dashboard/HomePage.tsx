@@ -25,7 +25,7 @@ const DashboardHomePage = () => {
     // const [opened, { open, close }] = useDisclosure(false);
     const navigate = useNavigate();
 
-    const handleNewProject = () => {
+    const handleNewProject = async () => {
         navigate("/exams/new")
     }
 
