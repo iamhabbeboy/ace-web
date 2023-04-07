@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IExam, IUser } from "../../types/Type";
+import { IExam } from "../../types/Type";
 import { ExamState, initialState } from "../collections/exam";
-import { UserState } from "../collections/user/index";
 import { generate } from "shortid";
 
 export const createExam = createAsyncThunk("exam/create", async (payload: Partial<IExam>, { rejectWithValue }) => {

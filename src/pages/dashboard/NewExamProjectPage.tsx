@@ -5,14 +5,11 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import ModalView from '../../components/Modal';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router-dom';
-import { createExam, getExam } from '../../store/thunks/exam';
-import { RootState, store } from '../../store';
+import { createExam } from '../../store/thunks/exam';
+import { store } from '../../store';
 import { useState } from 'react';
 import { Subject } from '../../types/Type';
-import { useSelector } from 'react-redux';
-import { ExamState } from '../../store/collections/exam';
 import { hyphinize } from '../../util/string';
-import Notify from '../../components/Notify';
 import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
@@ -66,10 +63,14 @@ const NewProjectPage = () => {
             student_count: studentCount,
         }));
         if (createExam.fulfilled.match(response)) {
-            console.log(response)
-            // navigate('/exams/'+response+'/questions');
+            navigate('/exams/xklskdffjsdfsdf');
+            return;
         }
-        // navigate('/exams/c123-34323-34234x/questions');
+        showNotification({
+            title: 'Error Occured',
+            message: 'An error occured while creating exam project',
+            color: 'red'
+        });
     }
 
     const handleSubjectSelection = (value: string[]) => {

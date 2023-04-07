@@ -84,6 +84,7 @@ const data = [
 const ExamOverviewPage = () => {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Billing');
+    const link = '#';
 
     const [view, setView] = useState({component: "Overview", props: {}})
     const components = {
@@ -124,7 +125,7 @@ const ExamOverviewPage = () => {
                                 {links}
                             </Navbar.Section>
                             <Navbar.Section className={classes.footer}>
-                                <a href={"#"} className={classes.link} onClick={(event) => event.preventDefault()}>
+                                <a href={link} className={classes.link} onClick={(event) => event.preventDefault()}>
                                     <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
                                     <span>Upgrade Account</span>
                                 </a>

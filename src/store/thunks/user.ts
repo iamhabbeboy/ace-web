@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IUser } from "../../types/Type";
-import { UpdateUserPayload, initialState } from "../collections/user";
+import { initialState } from "../collections/user";
 import { UserState } from "../collections/user/index";
 
 export const createUser = createAsyncThunk("user/create", async (payload: IUser, { rejectWithValue }) => {
