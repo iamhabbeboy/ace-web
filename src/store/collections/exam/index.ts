@@ -3,36 +3,38 @@ import { createExam } from "../../thunks/exam";
 import { IExam } from "../../../types/Type";
 
 export interface ExamState {
-  data: IExam;
+  data: IExam[];
   error?: string;
   isLoading?: boolean;
 }
 
 export const initialState: ExamState = {
-  data: {
-    id: "000000000000000000000",
-    name: "",
-    description: "",
-    student_count: "0",
-    created_at: new Date().toUTCString(),
-    updated_at: new Date().toUTCString(),
-    expired_at: new Date().toUTCString(),
-    student_login_uri: "",
-    created_by: "",
-    user_id: "",
-    subject_slugs: [],
-    questions: [
-      {
-        content: "",
-        content_html: "",
-        answer: "",
-        options: [],
-      },
-    ],
-  },
+  data: [],
   isLoading: false,
   error: "",
 };
+
+// {
+//   id: "000000000000000000000",
+//   name: "",
+//   description: "",
+//   student_count: "0",
+//   created_at: new Date().toUTCString(),
+//   updated_at: new Date().toUTCString(),
+//   expired_at: new Date().toUTCString(),
+//   student_login_uri: "",
+//   created_by: "",
+//   user_id: "",
+//   subject_slugs: [],
+//   questions: [
+//     {
+//       content: "",
+//       content_html: "",
+//       answer: "",
+//       options: [],
+//     },
+//   ],
+// }
 
 export const examSlice = createSlice({
   name: "user",
@@ -50,8 +52,7 @@ export const examSlice = createSlice({
       createExam.fulfilled,
       (state: ExamState, action) => {
         state.isLoading = false;
-        state.data = { ...state.data, ...action.payload };
-        console.log(state.data)
+        state.data.push(action.payload as IExam);
       }
     );
   },

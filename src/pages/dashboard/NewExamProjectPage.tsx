@@ -1,7 +1,7 @@
 import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton, MultiSelect } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
-import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
+import { IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 import ModalView from '../../components/Modal';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const NewProjectPage = () => {
     const [studentCount, setStudentCount] = useState<string>("0-50");
     const [subjects, setSubjects] = useState<string[]>([]);
     const [newSubject, setNewSubject] = useState<string>("");
-    
+
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.account.user)
     const subjectState = user.data.subjects;
@@ -84,7 +84,8 @@ const NewProjectPage = () => {
         showNotification({
             title: 'Successful',
             message: 'New subject added',
-            color: 'green'
+            color: 'green',
+            icon: <IconCheck />
         });
         close();
     }
