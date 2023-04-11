@@ -6,6 +6,7 @@ export interface IUser {
   last_name: string;
   email: string;
   companies: ICompany[];
+  subjects: ISubject[];
   username: string;
   password: string;
   created_at: string;
@@ -29,24 +30,24 @@ export interface IExam {
   updated_at: string;
   expired_at: string;
   user_id: string;
-  subjects: Subject[];
-  questions: Question[];
+  subject_slugs: string[];
+  questions: IQuestion[];
 }
 
-export interface Subject {
+export interface ISubject {
   name: string;
   slug: string;
   description?: string;
 }
 
-export interface Question {
+export interface IQuestion {
   content: string;
   content_html: string;
   answer: string;
-  options: Options[];
+  options: IOptions[];
 }
 
-export interface Options {
+export interface IOptions {
   label: string;
   content: string;
   content_html: string;

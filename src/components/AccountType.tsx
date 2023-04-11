@@ -20,10 +20,9 @@ const useStyles = createStyles((theme) => ({
     },
     section: {
         padding: theme.spacing.md,
-        borderTop: `${rem(1)} solid ${
-          theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-        }`,
-      },
+        borderTop: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+            }`,
+    },
 }));
 
 let checked = "0";
@@ -38,7 +37,7 @@ const AccountTypeCard = ({ label, description, onChecked, status }: AccountTypeC
     return (
         <Card withBorder radius="md" p="md"
             className={status === checked ? classes.checked : classes.card}
-            >
+        >
             <Card.Section mt="md" p={10}>
                 <Group>
                     <Radio
@@ -56,11 +55,11 @@ const AccountTypeCard = ({ label, description, onChecked, status }: AccountTypeC
                 </Text>
             </Card.Section>
             <Card.Section>
-        <Text mt="md" c="dimmed" className={classes.section}>
-          <div><IconCheck /> Unlimited access to all tests</div>
-          <div><IconCheck /> Unlimited access to all tests</div>
-        </Text>
-      </Card.Section>
+                <Text mt="md" c="dimmed" className={classes.section}>
+                    <div><IconCheck /> Unlimited access to all tests</div>
+                    <div><IconCheck /> Unlimited access to all tests</div>
+                </Text>
+            </Card.Section>
         </Card>
     )
 }

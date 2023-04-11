@@ -1,36 +1,65 @@
-import { Button, Container, Group, SimpleGrid } from "@mantine/core"
-import { IconChevronRight } from "@tabler/icons-react";
 import { useState } from "react";
-import AccountTypeCard from "../components/AccountType"
 import MenuNavBar from "../components/MenuNavBar";
-
-// const useStyles = createStyles((theme) => ({
-//     section: {
-//         padding: theme.spacing.md,
-//         borderRadius: theme.radius.sm,
-//         backgroundColor: `#fff`,
-//         border: `${rem(0.9)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]}`,
-//     }
-// }));
+import CompanyInfoView from "../components/onboarding/CompanyInfoView";
+import AccountTypeSelectionView from "../components/onboarding/AccountTypeSelectionView";
+import { Container, Group, Button } from "@mantine/core";
+import { IconChevronRight, IconX } from "@tabler/icons-react";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../store/collections/user";
+import { useNavigate } from "react-router-dom";
+import { showNotification } from "@mantine/notifications";
 
 const AccountTypeSelectionPage = () => {
-    const [checked, setChecked] = useState("0");
-    // const { classes } = useStyles();
-    console.log(checked)
+    const [onboardView, setOnboardView] = useState<string>("0");
+    const [company, setCompanyName] = useState("");
+    const navigate = useNavigate();
+    const [about, setAbout] = useState("");
+
+    const setAccountType = (type: string) => {
+        setOnboardView(type);
+    }
+
+    const setCompanyInfo = (name: string, about: string) => {
+        setCompanyName(name);
+        setAbout(about);
+    }
+
+    const dispatcher = useDispatch()
+
+    const handleInfo = () => {
+        if(onboardView === "1" && (company === "" || about === "")) {
+            showNotification({
+                title: "Error",
+                message: "Please fill in all fields",
+                color: "red",
+                icon: <IconX />
+            })
+            return;
+        }
+        if (company !== "" || about !== "") {
+            dispatcher(updateUser({
+                companies: [{
+                    name: company,
+                    logo: "",
+                    description: about,
+                }],
+                id: "000000000000000000000"
+            }))
+        }
+        navigate("/home")
+    }
+
+    const resize = onboardView === "1" ? "xs" : "";
     return (
         <>
-        <MenuNavBar />
-        <Container >
-            <h2>Select Account Type </h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit..</p>
-            <SimpleGrid cols={2} mt="md">
-                <AccountTypeCard label="Individual" description="Some of the benefit" status={"0"} onChecked={setChecked} />
-                <AccountTypeCard label="Company" description="stuff here about school, team, organization" status={"1"} onChecked={setChecked} />
-            </SimpleGrid>
-            <Group position="right">
-                <Button mt={"md"}>Continue <IconChevronRight /></Button>
-            </Group>
-        </Container>
+            <MenuNavBar />
+            {onboardView === "0" && <AccountTypeSelectionView onAccountType={setAccountType} />}
+            {onboardView === "1" && <CompanyInfoView onAccountType={setAccountType} onHandleCompanyInfo={setCompanyInfo} />}
+            <Container size={resize}>
+                <Group position="right">
+                    <Button mt={"md"} onClick={handleInfo}>Continue <IconChevronRight /></Button>
+                </Group>
+            </Container>
         </>
     )
 }

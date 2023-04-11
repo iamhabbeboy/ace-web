@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getUser } from "../../thunks/user";
+import { createSlice } from "@reduxjs/toolkit";
+import { createExam } from "../../thunks/exam";
 import { IExam } from "../../../types/Type";
 
 export interface ExamState {
@@ -20,19 +20,15 @@ export const initialState: ExamState = {
     student_login_uri: "",
     created_by: "",
     user_id: "",
-    subjects: [{
-      name: "English",
-      slug: "english",
-      description: "",
-    }],
+    subject_slugs: [],
     questions: [
-          {
-            content: "",
-            content_html: "",
-            answer: "",
-            options: [],
-          },
-        ],
+      {
+        content: "",
+        content_html: "",
+        answer: "",
+        options: [],
+      },
+    ],
   },
   isLoading: false,
   error: "",
@@ -43,18 +39,19 @@ export const examSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUser.pending, (state: ExamState) => {
+    builder.addCase(createExam.pending, (state: ExamState) => {
       state.isLoading = true;
     });
-    builder.addCase(getUser.rejected, (state: ExamState, action) => {
+    builder.addCase(createExam.rejected, (state: ExamState, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
     builder.addCase(
-      getUser.fulfilled,
-      (state: ExamState, action: PayloadAction<{}>) => {
+      createExam.fulfilled,
+      (state: ExamState, action) => {
         state.isLoading = false;
-        // state.data = action.payload;
+        state.data = { ...state.data, ...action.payload };
+        console.log(state.data)
       }
     );
   },

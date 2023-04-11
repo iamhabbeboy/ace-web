@@ -3,15 +3,18 @@ import { IExam } from "../../types/Type";
 import { ExamState, initialState } from "../collections/exam";
 import { generate } from "shortid";
 
-export const createExam = createAsyncThunk("exam/create", async (payload: Partial<IExam>, { rejectWithValue }) => {
-  try {
-    // const { data } = await axios.post("/api/accounts", payload);
-    payload.id = generate();
-    return payload;
-  } catch (err: any) {
-    return rejectWithValue("error occured");
+export const createExam = createAsyncThunk(
+  "exam/create",
+  async (payload: Partial<IExam>, { rejectWithValue }) => {
+    try {
+      // const { data } = await axios.post("/api/accounts", payload);
+      payload.id = generate();
+      return payload;
+    } catch (err: any) {
+      return rejectWithValue("error occured");
+    }
   }
-});
+);
 
 export const getExam = createAsyncThunk<
   ExamState,
@@ -25,5 +28,3 @@ export const getExam = createAsyncThunk<
     return rejectWithValue("error occured");
   }
 });
-
-

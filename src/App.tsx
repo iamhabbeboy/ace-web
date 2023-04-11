@@ -13,7 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path="/onboarding/account-type" element={<AccountTypeSelectionPage />} />
+          <Route path="/onboarding/account" element={<AccountTypeSelectionPage />} />
           <Route path="/home" element={<DashboardHomePage />} />
           <Route path="/exams/new" element={<NewExamProjectPage />} />
           <Route path="/exams/:examId/questions" element={<NewQuestionPage />} />

@@ -31,14 +31,22 @@ function SignInButton() {
         logo: "https://bashlabs.com/wp-content/uploads/2020/09/cropped-BashLabs-Logo-1.png",
         description: "",
       }],
-      username: '',
-      password: '',
-      created_at: '',
-      updated_at: ''
+      subjects: [{
+        name: "Mathematics",
+        slug: "mathematics",
+        description: "Mathematics",
+      }, {
+        name: "English",
+        slug: "english",
+        description: "English",
+      }],
+      username: "",
+      password: "",
+      created_at: "",
+      updated_at: ""
     }));
 
-    navigation('/home')
-    // console.log(result)
+    navigation('/onboarding/account')
   }
   return (
     <Group position="left">

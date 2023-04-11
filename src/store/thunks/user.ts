@@ -14,7 +14,7 @@ export const createUser = createAsyncThunk("user/create", async (payload: IUser,
 
 export const getUser = createAsyncThunk<
   UserState,
-  { id: string | undefined },
+  { id: string },
   { rejectValue: string }
 >("user/get", async (id, { rejectWithValue }) => {
   try {
@@ -24,3 +24,4 @@ export const getUser = createAsyncThunk<
     return rejectWithValue("error occured");
   }
 });
+

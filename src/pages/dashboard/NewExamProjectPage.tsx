@@ -1,16 +1,19 @@
 import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton, MultiSelect } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 import ModalView from '../../components/Modal';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router-dom';
 import { createExam } from '../../store/thunks/exam';
-import { store } from '../../store';
+import { RootState, store } from '../../store';
 import { useState } from 'react';
-import { Subject } from '../../types/Type';
+import { ISubject } from '../../types/Type';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { updateUser } from '../../store/collections/user';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -34,34 +37,26 @@ const NewProjectPage = () => {
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [studentCount, setStudentCount] = useState<string>("0-50");
-    const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [subjects, setSubjects] = useState<string[]>([]);
     const [newSubject, setNewSubject] = useState<string>("");
-    const subjectPayload: Subject[] = [
-        {
-            name: "Mathematics",
-            slug: "mathematics",
-            description: "Mathematics",
-        },
-        {
-            name: "English",
-            slug: "english",
-            description: "English",
-        },
-    ];
-    const subjectData = subjectPayload.map((subject: Subject) => {
+    
+    const dispatch = useDispatch()
+    const user = useSelector((state: RootState) => state.account.user)
+    const subjectState = user.data.subjects;
+    const subjectData = subjectState.map((subject: any) => {
         return { value: subject.name, label: subject.name }
     })
 
     const navigate = useNavigate();
     const handleSubmitAction = async (e: any) => {
         e.preventDefault();
-        console.log(name, description, studentCount, subjects)
         const response = await store.dispatch(createExam({
             name: name,
-            subjects: subjects,
             description: description,
             student_count: studentCount,
+            subject_slugs: subjects,
         }));
+
         if (createExam.fulfilled.match(response)) {
             navigate('/exams/xklskdffjsdfsdf');
             return;
@@ -69,23 +64,23 @@ const NewProjectPage = () => {
         showNotification({
             title: 'Error Occured',
             message: 'An error occured while creating exam project',
-            color: 'red'
+            color: 'red',
+            icon: <IconX />
         });
     }
 
     const handleSubjectSelection = (value: string[]) => {
-        const subjects: Subject[] = value.map((item) => {
-            return {
-                name: item,
-                slug: hyphinize(item),
-                description: "",
-            }
+        const subjects: string[] = value.map((item) => {
+            return hyphinize(item)
         })
         setSubjects(subjects);
     }
 
     const handleNewSubject = () => {
-        subjectPayload.push({ name: newSubject, slug: hyphinize(newSubject) });
+        dispatch(updateUser({
+            subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
+            id: "00000000"
+        }));
         showNotification({
             title: 'Successful',
             message: 'New subject added',
