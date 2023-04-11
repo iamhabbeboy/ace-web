@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { createExam } from '../../store/thunks/exam';
 import { RootState, store } from '../../store';
 import { useState } from 'react';
-import { ISubject } from '../../types/Type';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
 import { useDispatch } from 'react-redux';
