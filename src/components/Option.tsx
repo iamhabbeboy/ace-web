@@ -1,5 +1,6 @@
-import { Group, Text } from "@mantine/core";
+import { Group, Text, UnstyledButton } from "@mantine/core";
 import QuestionRichTextEditor from "./QuestionRichTextEditor";
+import { IconTrash } from "@tabler/icons-react";
 
 interface OptionProps {
     label: string;
@@ -11,7 +12,8 @@ const Option = ({ label }: OptionProps) => {
             <Group mt={5}>
                 <Text>({label})</Text>
             </Group>
-            <QuestionRichTextEditor content="" />
+            {/* <QuestionRichTextEditor content="" /> */}
+            <UnstyledButton><IconTrash size={"1rem"} style={{ color: "#993300" }} /></UnstyledButton>
         </div>
     )
 }

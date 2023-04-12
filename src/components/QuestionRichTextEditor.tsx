@@ -6,11 +6,19 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
+import { useState } from 'react';
 
   interface QuestionRichTextEditorProps {
-    content: string;
+    onSetValue: (value: string) => void;
   }
-const QuestionRichTextEditor = ({ content}: QuestionRichTextEditorProps) => {
+const QuestionRichTextEditor = ({ onSetValue }: QuestionRichTextEditorProps) => {
+  const [content, setContent] = useState<any>('');
+  const handleTextUpdate = (value: any) => {
+    onSetValue(value.getHTML());
+    setContent(value);
+    console.log(value.getHTML());
+ }
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -24,8 +32,9 @@ const QuestionRichTextEditor = ({ content}: QuestionRichTextEditorProps) => {
     content,
   });
 
+
   return (
-    <RichTextEditor editor={editor}>
+    <RichTextEditor editor={editor} onChange={(value) => handleTextUpdate(value)}>
       <RichTextEditor.Toolbar sticky stickyOffset={60}>
         <RichTextEditor.ControlsGroup>
           <RichTextEditor.Bold />

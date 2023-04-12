@@ -12,6 +12,7 @@ import MenuNavBar from '../../components/MenuNavBar';
 import Footer from '../../components/Footer';
 import StudentView from '../../components/overview/Student';
 import Overview from '../../components/overview/Overview';
+import QuestionView from '../../components/overview/Question';
 
 
 const useStyles = createStyles((theme) => ({
@@ -77,7 +78,7 @@ const data = [
     { link: '', label: 'Overview', icon: IconReportAnalytics, component: "Overview" },
     { link: '', label: 'Result', icon: IconDatabaseExport, component: "StudentView" },
     { link: '', label: 'Students', icon: IconUsersGroup, component: "StudentView" },
-    { link: '', label: 'Questions', icon: IconEdit, component: "StudentView" },
+    { link: '', label: 'Questions', icon: IconEdit, component: "QuestionView" },
     { link: '', label: 'Other Settings', icon: IconSettings, component: "StudentView" },
 ];
 
@@ -89,7 +90,8 @@ const ExamOverviewPage = () => {
     const [view, setView] = useState({component: "Overview", props: {}})
     const components = {
         "Overview": Overview,
-        "StudentView": StudentView
+        "StudentView": StudentView,
+        "QuestionView": QuestionView,
     }
 
     const renderTabView = () => {

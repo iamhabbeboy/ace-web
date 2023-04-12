@@ -1,19 +1,10 @@
 import { Table, Checkbox, ScrollArea, rem } from '@mantine/core';
 
-// const useStyles = createStyles((theme) => ({
-//   rowSelected: {
-//     backgroundColor:
-//       theme.colorScheme === 'dark'
-//         ? theme.fn.rgba(theme.colors[theme.primaryColor][7], 0.2)
-//         : theme.colors[theme.primaryColor][0],
-//   },
-// }));
-
-const TableSelection = ({ data }: any) => {
+const TableSelection = ({ hasCheckbox, data }: any) => {
   // const { classes, cx } = useStyles();
   // const [selection, setSelection] = useState(['1']);
   const rows: any = [], headers: any = [];
-  for(let item in data){
+  for (let item of data) {
     rows.push(Object.values(item))
     headers.push(Object.keys(item))
   }
@@ -23,14 +14,10 @@ const TableSelection = ({ data }: any) => {
       <Table verticalSpacing="sm">
         <thead>
           <tr>
-            <th style={{ width: rem(40) }}>
-              <Checkbox
-                // onChange={toggleAll}
-                // checked={selection.length === data.length}
-                // indeterminate={selection.length > 0 && selection.length !== data.length}
-                transitionDuration={0}
-              />
-            </th>
+            {hasCheckbox &&
+              <th style={{ width: rem(40) }}>
+                <Checkbox />
+              </th>}
             {headers[0].map((row: any, index: number) => {
               return (
                 <th key={index}>{row.toUpperCase()}</th>
@@ -41,8 +28,8 @@ const TableSelection = ({ data }: any) => {
         <tbody>
           {rows.map((row: any, index: number) => {
             return (
-              <tr>
-                <td><Checkbox /></td>
+              <tr key={index}>
+                {hasCheckbox && <td><Checkbox /></td>}
                 {Object.values(row).map((row: any, index: number) => {
                   return (
                     <td key={index}>{row}</td>

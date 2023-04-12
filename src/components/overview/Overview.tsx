@@ -37,6 +37,7 @@ const Overview = () => {
                 <b>User Logs</b>
                 <Divider />
                 <TableSelection
+                    hasCheckbox={false}
                     data={[{
                         id: "123",
                         name: "John Doe",
