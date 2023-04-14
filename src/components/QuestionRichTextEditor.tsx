@@ -6,7 +6,6 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
-import { useState } from 'react';
 
   interface QuestionRichTextEditorProps {
     onSetValue: (value: {content: string, contentHTML: string}) => void;

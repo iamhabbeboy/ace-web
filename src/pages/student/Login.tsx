@@ -23,7 +23,6 @@ const Login = () => {
                 <Text>Username</Text>
                 <Input icon={<IconUser />} size="lg" />
                 <Text mt={5}>Password</Text>
-                {/* <Input icon={<IconAsterisk />} size="lg" /> */}
                 <PasswordInput
                 icon={<IconAsterisk />}
                     placeholder="Password"

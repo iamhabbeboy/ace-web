@@ -6,6 +6,8 @@ import AccountTypeSelectionPage from './pages/AccountTypeSelectionPage';
 import NewExamProjectPage from './pages/dashboard/NewExamProjectPage';
 import ExamOverviewPage from './pages/dashboard/ExamOverviewPage';
 import Login from './pages/student/Login';
+import Overview from './pages/student/Overview';
+import Exam from './pages/student/Exam';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route path="*" element={<Error404Page />} />
           {/* Student Portal */}
           <Route path="/login" element={<Login />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/exam" element={<Exam />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,5 +1,4 @@
 import { Group, Text, Textarea, UnstyledButton } from "@mantine/core";
-import QuestionRichTextEditor from "./QuestionRichTextEditor";
 import { IconTrash } from "@tabler/icons-react";
 
 interface OptionProps {

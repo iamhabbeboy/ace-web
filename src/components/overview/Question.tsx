@@ -1,11 +1,11 @@
-import { Select, Group, Button, Text, createStyles, rem, Tabs, UnstyledButton } from "@mantine/core"
-import { IconChevronLeft, IconChevronRight, IconCirclePlus, IconTrash, IconX } from "@tabler/icons-react"
-import { useEffect, useState } from "react";
+import { Select, Group, Button, Text, createStyles, rem, Tabs } from "@mantine/core"
+import { IconChevronRight, IconCirclePlus, IconX } from "@tabler/icons-react"
+import { useState } from "react";
 import QuestionRichTextEditor from "../QuestionRichTextEditor"
 import Option from '../Option';
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { selectCustomSubject, selectSubject } from "../../store/selectors";
+import { selectCustomSubject } from "../../store/selectors";
 import TableSelection from "../Table";
 import { showNotification } from "@mantine/notifications";
 
