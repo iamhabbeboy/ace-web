@@ -3,7 +3,7 @@ import MenuNavBar from "../../components/MenuNavBar"
 import emptyImage from "../../assets/empty-exam-image.svg"
 import Footer from "../../components/Footer"
 import { useNavigate } from "react-router-dom"
-import { IconAlertCircle, IconCircle, IconCirclePlus, IconPlus, IconTrash } from "@tabler/icons-react"
+import { IconAlertCircle, IconTrash } from "@tabler/icons-react"
 import { useSelector } from "react-redux"
 import { RootState } from "../../store"
 import { IExam } from '../../types/Type';

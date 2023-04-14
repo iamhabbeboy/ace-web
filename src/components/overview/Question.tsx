@@ -1,6 +1,6 @@
 import { Select, Group, Button, Text, createStyles, rem, Tabs, UnstyledButton } from "@mantine/core"
 import { IconChevronLeft, IconChevronRight, IconCirclePlus, IconTrash, IconX } from "@tabler/icons-react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuestionRichTextEditor from "../QuestionRichTextEditor"
 import Option from '../Option';
 import { useSelector } from "react-redux";
@@ -27,11 +27,13 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 	const { classes } = useStyles();
 	const [options, setOptions] = useState(1);
 	const [labelAdded, setLabelAdded] = useState<string[]>(["A"]);
-	const optionLabels = ["A","B","C","D","E","F"];
+	const optionLabels = ["A", "B", "C", "D", "E", "F"];
 
 	const [subjectData, setSubjectData] = useState("");
-	const [question, setQuestion] = useState("");
-	const [opt, setOpt] = useState();
+	const [question, setQuestion] = useState({ content: '', contentHTML: '' });
+	const [opts, setOpts] = useState('');
+	const [optionsData, setOptionsData] = useState<string[]>([]);
+	// setOptionsData([...optionsData, opts])
 	const [correctAnswer, setCorrectAnswer] = useState();
 
 	const labels = labelAdded.map((label) => {
@@ -42,6 +44,15 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 	const subjects = selectCustomSubject(state)
 
 	const handleCreateOption = () => {
+		if(opts === "") {
+			showNotification({
+				title: "Error",
+				message: "Option Field cannot be empty",
+				color: "red",
+				icon: <IconX />
+			})
+			return;
+		}
 		if (options >= optionLabels.length) {
 			showNotification({
 				title: "Error",
@@ -53,10 +64,15 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 		}
 		setOptions(options + 1);
 		setLabelAdded([...labelAdded, optionLabels[options]])
+		setOptionsData([...optionsData, opts])
+		setOpts('')
 	}
 
 	const handleAddQuestion = () => {
-		console.log(question)
+		if(!optionsData.includes(opts)) {
+			setOptionsData([...optionsData, opts])
+		}
+		console.log(optionsData)
 	}
 
 	return (
@@ -83,7 +99,7 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 						<Select
 							searchable
 							data={subjects}
-							onChange={(value) => setSubjectData(value as string) }
+							onChange={(value) => setSubjectData(value as string)}
 						/>
 						<Text size={"sm"} mt={15} weight="bold">Question</Text>
 						<QuestionRichTextEditor onSetValue={setQuestion} />
@@ -93,9 +109,8 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 							<Button size={"xs"} onClick={handleCreateOption}>Add New <IconCirclePlus /></Button>
 						</Group>
 						{Array.from(Array(options), (option, index) => {
-							return <Option key={index} label={labelAdded[index]} />
+							return <Option key={index} label={labelAdded[index]} onSetOptions={setOpts} />
 						})}
-
 						<Select
 							mt={15}
 							label="Select Correct Answer"

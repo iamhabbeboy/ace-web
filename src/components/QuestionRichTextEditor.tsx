@@ -9,16 +9,10 @@ import SubScript from '@tiptap/extension-subscript';
 import { useState } from 'react';
 
   interface QuestionRichTextEditorProps {
-    onSetValue: (value: string) => void;
+    onSetValue: (value: {content: string, contentHTML: string}) => void;
   }
 const QuestionRichTextEditor = ({ onSetValue }: QuestionRichTextEditorProps) => {
-  const [content, setContent] = useState<any>('');
-  const handleTextUpdate = (value: any) => {
-    onSetValue(value.getHTML());
-    setContent(value);
-    console.log(value.getHTML());
- }
-
+  const content = '';
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -33,8 +27,13 @@ const QuestionRichTextEditor = ({ onSetValue }: QuestionRichTextEditorProps) => 
   });
 
 
+  if(editor && editor.getText().length > 0) {
+    const data = { content: editor?.getText() || '', contentHTML: editor?.getHTML() || ''}
+    onSetValue(data);
+  }
+
   return (
-    <RichTextEditor editor={editor} onChange={(value) => handleTextUpdate(value)}>
+    <RichTextEditor editor={editor}>
       <RichTextEditor.Toolbar sticky stickyOffset={60}>
         <RichTextEditor.ControlsGroup>
           <RichTextEditor.Bold />
