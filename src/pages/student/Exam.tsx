@@ -22,7 +22,7 @@ const Exam = () => {
             <Group position="apart">
                 <div>
                     <h1 style={{color: "#666" }}>Ace Test</h1>
-                    <Button mb={5} size="xs">Submit &nbsp;<IconCircleCheck /></Button>
+                    <Button mb={5} size="xs" color={"red"}>Submit &nbsp;<IconCircleCheck /></Button>
                 </div>
                 <div style={{textAlign: "right"}}>
                     <p>Time Remaining</p>

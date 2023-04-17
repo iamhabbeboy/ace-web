@@ -28,3 +28,15 @@ export const getExam = createAsyncThunk<
     return rejectWithValue("error occured");
   }
 });
+
+export const updateExam = createAsyncThunk(
+  "exam/update",
+  async (payload: IExam, { rejectWithValue }) => {
+    try {
+      // const { data } = await axios.post("/api/accounts", payload);
+      return payload;
+    } catch (err: any) {
+      return rejectWithValue("error occured");
+    }
+  }
+);

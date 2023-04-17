@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "./index";
-import { ISubject, IUser } from "../types/Type";
+import { IExam, ISubject, IUser } from "../types/Type";
 
 export const selectUser = (state: RootState): IUser => state.account.user.data;
 
@@ -15,5 +15,14 @@ export const selectCustomSubject = createSelector(
     return subjects.map((subject: ISubject) => {
       return { label: subject.name, value: subject.slug };
     });
+  }
+);
+
+export const selectExam = (state: RootState): IExam[] => state.account.exam.data;
+
+export const selectExamById = createSelector(
+  [selectExam],
+  (exams): IExam[] => {
+    return exams.map((exam: IExam) => exam);
   }
 );

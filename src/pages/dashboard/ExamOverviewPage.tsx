@@ -13,6 +13,11 @@ import Footer from '../../components/Footer';
 import StudentView from '../../components/overview/Student';
 import Overview from '../../components/overview/Overview';
 import QuestionView from '../../components/overview/Question';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RootState } from '../../store';
+import { useSelector } from 'react-redux';
+import { selectExam } from '../../store/selectors';
+import { IExam } from '../../types/Type';
 
 
 const useStyles = createStyles((theme) => ({
@@ -86,6 +91,18 @@ const ExamOverviewPage = () => {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Billing');
     const link = '#';
+    let { examId } = useParams();
+    const navigation = useNavigate();
+    if(!examId) {
+        navigation("/home")
+    }
+
+    const examState = useSelector((_state: RootState) => _state)
+	const exam = selectExam(examState)
+    if(!exam) {
+        navigation("/home")
+    }
+    const currentExam = exam.find((exam) => exam.id === examId)
 
     const [view, setView] = useState({component: "Overview", props: {}})
     const components = {
@@ -96,7 +113,7 @@ const ExamOverviewPage = () => {
 
     const renderTabView = () => {
         const Component = components[view.component as keyof typeof components]
-        return <Component />
+        return <Component exam={currentExam as IExam} />
     }
 
 

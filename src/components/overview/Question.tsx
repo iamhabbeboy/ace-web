@@ -4,13 +4,15 @@ import { useState } from "react";
 import QuestionRichTextEditor from "../QuestionRichTextEditor"
 import Option from '../Option';
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState, store } from "../../store";
 import { selectCustomSubject } from "../../store/selectors";
-import TableSelection from "../Table";
 import { showNotification } from "@mantine/notifications";
-
+import { updateExam } from "../../store/thunks/exam";
+import { IExam, IOptions } from "../../types/Type";
+import GroupSubject from "./GroupSubject";
 interface QuestionProps {
 	subject?: string;
+	exam: IExam;
 }
 const useStyles = createStyles((theme) => ({
 	section: {
@@ -23,7 +25,7 @@ const useStyles = createStyles((theme) => ({
 	},
 }));
 
-const AddQuestionTab = ({ subject }: QuestionProps) => {
+const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 	const { classes } = useStyles();
 	const [options, setOptions] = useState(1);
 	const [labelAdded, setLabelAdded] = useState<string[]>(["A"]);
@@ -33,8 +35,7 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 	const [question, setQuestion] = useState({ content: '', contentHTML: '' });
 	const [opts, setOpts] = useState('');
 	const [optionsData, setOptionsData] = useState<string[]>([]);
-	// setOptionsData([...optionsData, opts])
-	const [correctAnswer, setCorrectAnswer] = useState();
+	const [correctAnswer, setCorrectAnswer] = useState("");
 
 	const labels = labelAdded.map((label) => {
 		return { label, value: label }
@@ -44,7 +45,7 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 	const subjects = selectCustomSubject(state)
 
 	const handleCreateOption = () => {
-		if(opts === "") {
+		if (opts === "") {
 			showNotification({
 				title: "Error",
 				message: "Option Field cannot be empty",
@@ -62,17 +63,73 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 			})
 			return;
 		}
-		setOptions(options + 1);
 		setLabelAdded([...labelAdded, optionLabels[options]])
 		setOptionsData([...optionsData, opts])
+		setOptions(options + 1);
 		setOpts('')
 	}
 
 	const handleAddQuestion = () => {
-		if(!optionsData.includes(opts)) {
-			setOptionsData([...optionsData, opts])
+		if (subjectData === "") {
+			showNotification({
+				title: "Error",
+				message: "Subject Field cannot be empty",
+				color: "red",
+				icon: <IconX />
+			})
+			return;
 		}
-		console.log(optionsData)
+
+		if (question.content === "") {
+			showNotification({
+				title: "Error",
+				message: "Question Field cannot be empty",
+				color: "red",
+				icon: <IconX />
+			})
+			return;
+		}
+
+		if (opts === "") {
+			showNotification({
+				title: "Error",
+				message: "Option Field cannot be empty",
+				color: "red",
+				icon: <IconX />
+			})
+			return;
+		}
+
+		if (correctAnswer === "") {
+			showNotification({
+				title: "Error",
+				message: "Correct Answer Field cannot be empty",
+				color: "red",
+				icon: <IconX />
+			})
+			return;
+		}
+		const optimum = optionsData.concat(opts)
+
+		const opt: IOptions[] = optimum.map((option, index) => {
+			return {
+				label: optionLabels[index],
+				content: option,
+			}
+		});
+
+		const qtn = {
+			id: exam.id,
+			questions: [{
+				content: question.content,
+				options: opt,
+				answer: correctAnswer,
+				subject: subjectData,
+				content_html: question.content
+			}]
+		};
+
+		store.dispatch(updateExam(qtn as IExam));
 	}
 
 	return (
@@ -85,13 +142,7 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 						<Tabs.Tab value="second">Add</Tabs.Tab>
 					</Tabs.List>
 					<Tabs.Panel value="first">
-						<TableSelection
-							data={[{
-								name: "John Doe",
-								id: "1234",
-								email: "john.doe@gmail.com"
-							}]}
-						/>
+						<GroupSubject exam={exam} />
 					</Tabs.Panel>
 					<Tabs.Panel value="second">
 						<h3>Students</h3>
@@ -115,6 +166,7 @@ const AddQuestionTab = ({ subject }: QuestionProps) => {
 							mt={15}
 							label="Select Correct Answer"
 							data={labels}
+							onChange={(value) => setCorrectAnswer(value as string)}
 						/>
 						<Button mt={"md"} size={"md"} onClick={handleAddQuestion}>Submit <IconChevronRight /></Button>
 					</Tabs.Panel>

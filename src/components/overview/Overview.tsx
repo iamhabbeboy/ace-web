@@ -1,6 +1,7 @@
 import { Card, createStyles, rem, Divider, Group, Switch } from '@mantine/core';
 import TableSelection from '../Table';
 import { IconCopy } from '@tabler/icons-react';
+import { IExam } from '../../types/Type';
 const useStyles = createStyles((theme) => ({
     section: {
         padding: theme.spacing.md,
@@ -10,7 +11,10 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const Overview = () => {
+interface OverviewProps {
+    exam: IExam
+}
+const Overview = ({ exam }: OverviewProps) => {
     const { classes } = useStyles();
 
     return (

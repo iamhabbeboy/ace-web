@@ -44,11 +44,12 @@ export interface IQuestion {
   content: string;
   content_html: string;
   answer: string;
+  subject: string;
   options: IOptions[];
 }
 
 export interface IOptions {
   label: string;
   content: string;
-  content_html: string;
+  content_html?: string;
 }

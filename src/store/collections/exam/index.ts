@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createExam } from "../../thunks/exam";
+import { createExam, updateExam } from "../../thunks/exam";
 import { IExam } from "../../../types/Type";
 
 export interface ExamState {
@@ -37,7 +37,7 @@ export const initialState: ExamState = {
 // }
 
 export const examSlice = createSlice({
-  name: "user",
+  name: "exam",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -48,13 +48,25 @@ export const examSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
-    builder.addCase(
-      createExam.fulfilled,
-      (state: ExamState, action) => {
-        state.isLoading = false;
-        state.data.push(action.payload as IExam);
-      }
-    );
+    builder.addCase(createExam.fulfilled, (state: ExamState, action) => {
+      state.isLoading = false;
+      state.data.push(action.payload as IExam);
+    });
+
+    builder.addCase(updateExam.pending, (state: ExamState) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateExam.rejected, (state: ExamState, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(updateExam.fulfilled, (state: ExamState, action) => {
+      state.isLoading = false;
+        const index = state.data.findIndex(
+          (item) => item.id === action.payload.id
+        );
+        state.data[index] = { ...state.data[index], ...action.payload};
+    });
   },
 });
 

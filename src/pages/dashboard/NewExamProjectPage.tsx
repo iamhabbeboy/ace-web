@@ -57,7 +57,7 @@ const NewProjectPage = () => {
         }));
 
         if (createExam.fulfilled.match(response)) {
-            navigate('/exams/xklskdffjsdfsdf');
+            navigate(`/exams/${response.payload.id}`);
             return;
         }
         showNotification({
