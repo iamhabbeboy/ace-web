@@ -1,8 +1,8 @@
 import { Textarea } from '@mantine/core';
 
-  interface QuestionRichTextEditorProps {
-    onSetValue: (value: {content: string, contentHTML: string}) => void;
-  }
+interface QuestionRichTextEditorProps {
+  onSetValue: (value: { content: string, contentHTML: string }) => void;
+}
 const QuestionRichTextEditor = ({ onSetValue }: QuestionRichTextEditorProps) => {
   // const content = '';
   // const editor = useEditor({
@@ -26,8 +26,9 @@ const QuestionRichTextEditor = ({ onSetValue }: QuestionRichTextEditorProps) => 
 
   return (
     <>
-    <Textarea onChange={(e) => setValue(e.target.value)}></Textarea>
-    {/* <RichTextEditor editor={editor}>
+      <Textarea autosize
+        minRows={2} onChange={(e) => setValue(e.target.value)}></Textarea>
+      {/* <RichTextEditor editor={editor}>
     //   <RichTextEditor.Toolbar sticky stickyOffset={60}>
     //     <RichTextEditor.ControlsGroup>
     //       <RichTextEditor.Bold />

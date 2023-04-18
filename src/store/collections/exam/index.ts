@@ -65,7 +65,13 @@ export const examSlice = createSlice({
         const index = state.data.findIndex(
           (item) => item.id === action.payload.id
         );
-        state.data[index] = { ...state.data[index], ...action.payload};
+        // state.data[index].questions = [...state.data[index].questions, ...action.payload.questions] || [];
+        if (Array.isArray(action.payload.questions)) {
+          state.data[index].questions = [...state.data[index].questions, ...action.payload.questions];
+        } else {
+          state.data[index].questions = state.data[index].questions || [];
+        }
+        
     });
   },
 });

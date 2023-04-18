@@ -1,5 +1,5 @@
 import { Select, Group, Button, Text, createStyles, rem, Tabs } from "@mantine/core"
-import { IconChevronRight, IconCirclePlus, IconX } from "@tabler/icons-react"
+import { IconCheck, IconChevronRight, IconCirclePlus, IconX } from "@tabler/icons-react"
 import { useState } from "react";
 import QuestionRichTextEditor from "../QuestionRichTextEditor"
 import Option from '../Option';
@@ -130,6 +130,12 @@ const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 		};
 
 		store.dispatch(updateExam(qtn as IExam));
+		showNotification({
+			title: "Success",
+			message: "Question has been added",
+			color: "green",
+			icon: <IconCheck />
+		})
 	}
 
 	return (
@@ -140,6 +146,7 @@ const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 					<Tabs.List>
 						<Tabs.Tab value="first">Contents</Tabs.Tab>
 						<Tabs.Tab value="second">Add</Tabs.Tab>
+						<Tabs.Tab value="fileupload">Upload</Tabs.Tab>
 					</Tabs.List>
 					<Tabs.Panel value="first">
 						<GroupSubject exam={exam} />
@@ -169,6 +176,9 @@ const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 							onChange={(value) => setCorrectAnswer(value as string)}
 						/>
 						<Button mt={"md"} size={"md"} onClick={handleAddQuestion}>Submit <IconChevronRight /></Button>
+					</Tabs.Panel>
+					<Tabs.Panel value="fileupload">
+						<h3>File Upload</h3>
 					</Tabs.Panel>
 				</Tabs>
 

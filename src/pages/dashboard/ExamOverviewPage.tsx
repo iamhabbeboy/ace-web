@@ -19,7 +19,6 @@ import { useSelector } from 'react-redux';
 import { selectExam } from '../../store/selectors';
 import { IExam } from '../../types/Type';
 
-
 const useStyles = createStyles((theme) => ({
     header: {
         paddingBottom: theme.spacing.md,
@@ -93,15 +92,14 @@ const ExamOverviewPage = () => {
     const link = '#';
     let { examId } = useParams();
     const navigation = useNavigate();
-    if(!examId) {
-        navigation("/home")
-    }
-
     const examState = useSelector((_state: RootState) => _state)
 	const exam = selectExam(examState)
-    if(!exam) {
-        navigation("/home")
-    }
+    // useState(() => {
+        if(!examId || !exam.length) {
+            navigation("/home")
+        }
+    // })
+
     const currentExam = exam.find((exam) => exam.id === examId)
 
     const [view, setView] = useState({component: "Overview", props: {}})
