@@ -7,9 +7,9 @@ import { useSelector } from "react-redux";
 import { RootState, store } from "../../store";
 import { selectCustomSubject } from "../../store/selectors";
 import { showNotification } from "@mantine/notifications";
-import { updateExam } from "../../store/thunks/exam";
 import { IExam, IOptions } from "../../types/Type";
 import GroupSubject from "./GroupSubject";
+import { updateExamObj } from "../../store/collections/exam";
 interface QuestionProps {
 	subject?: string;
 	exam: IExam;
@@ -129,13 +129,16 @@ const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 			}]
 		};
 
-		store.dispatch(updateExam(qtn as IExam));
+		store.dispatch(updateExamObj(qtn as IExam));
 		showNotification({
 			title: "Success",
 			message: "Question has been added",
 			color: "green",
 			icon: <IconCheck />
 		})
+		setQuestion({ content: '', contentHTML: ''})
+		setCorrectAnswer('')
+		setSubjectData('')
 	}
 
 	return (

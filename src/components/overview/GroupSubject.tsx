@@ -6,7 +6,6 @@ interface GroupSubjectProps {
 }
 
 const GroupSubject = ({ exam }: GroupSubjectProps) => {
-    console.log(exam.questions)
     return (
         <Accordion defaultValue="customization">
             {exam.subject_slugs.map((subject, index) => {
@@ -28,6 +27,7 @@ const GroupSubject = ({ exam }: GroupSubjectProps) => {
                                         </thead>
                                         <tbody>
                                             {exam.questions.map((question: IQuestion, idx) => {
+                                                // if(question.subject !== subject) return null;
                                                 return (
                                                     <tr key={idx}>
                                                         <td>{idx + 1}</td>
