@@ -2,13 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IUser } from "../../types/Type";
 import { initialState } from "../collections/user";
 import { UserState } from "../collections/user/index";
+import {Axios} from "../../util/axios.lib";
 
 export const createUser = createAsyncThunk("user/create", async (payload: IUser, { rejectWithValue }) => {
   try {
-    // const { data } = await axios.post("/api/accounts", payload);
-    return payload;
+    console.log(payload)
+    const { data } = await Axios.post<IUser>("/api/v1/accounts", payload);
+    return data;
   } catch (err: any) {
-    return rejectWithValue("error occured");
+    return rejectWithValue(err);
   }
 });
 

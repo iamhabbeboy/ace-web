@@ -19,7 +19,7 @@ const HomePage = () => {
 function SignInButton() {
   const navigation = useNavigate()
   const handleUserLogin = async () => {
-    await store.dispatch(createUser({
+    const res = await store.dispatch(createUser({
       first_name: "Abiodun",
       last_name: "Azeez",
       id: '0000000000',
