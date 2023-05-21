@@ -1,18 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IUser } from "../../types/Type";
-import { initialState } from "../collections/user";
+import { UpdateUserPayload, initialState } from "../collections/user";
 import { UserState } from "../collections/user/index";
-import {Axios} from "../../util/axios.lib";
+import { Axios } from "../../util/axios.lib";
 
-export const createUser = createAsyncThunk("user/create", async (payload: IUser, { rejectWithValue }) => {
-  try {
-    console.log(payload)
-    const { data } = await Axios.post<IUser>("/api/v1/accounts", payload);
-    return data;
-  } catch (err: any) {
-    return rejectWithValue(err);
+export const createUser = createAsyncThunk(
+  "user/create",
+  async (payload: IUser, { rejectWithValue }) => {
+    try {
+      const { data } = await Axios.post<IUser>("/api/v1/users", payload);
+      return data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
   }
-});
+);
 
 export const getUser = createAsyncThunk<
   UserState,
@@ -27,3 +29,15 @@ export const getUser = createAsyncThunk<
   }
 });
 
+// export const updateUserr = createAsyncThunk<
+//   UserState,
+//   UpdateUserPayload,
+//   { rejectValue: string }
+// >("user/update", async (payload, { rejectWithValue }) => {
+//   try {
+//     const { data } = await Axios.put(`/api/users/${payload.id}`, payload);
+//     return data;
+//   } catch (err: any) {
+//     return rejectWithValue(err.response.data);
+//   }
+// });

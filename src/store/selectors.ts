@@ -6,7 +6,7 @@ export const selectUser = (state: RootState): IUser => state.account.user.data;
 
 export const selectSubject = createSelector(
   [selectUser],
-  (user: IUser): ISubject[] => user.subjects
+  (user: IUser): ISubject[] => user.subjects || []
 );
 
 export const selectCustomSubject = createSelector(

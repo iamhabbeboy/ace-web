@@ -41,7 +41,7 @@ const NewProjectPage = () => {
 
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.account.user)
-    const subjectState = user.data.subjects;
+    const subjectState = user.data.subjects || [];
     const subjectData = subjectState.map((subject: any) => {
         return { value: subject.name, label: subject.name }
     })

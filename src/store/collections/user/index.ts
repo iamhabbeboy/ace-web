@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getUser } from "../../thunks/user";
+import { createUser } from "../../thunks/user";
 import { ICompany, ISubject, IUser } from "../../../types/Type";
 
 export interface UserState {
@@ -23,12 +23,12 @@ export const initialState: UserState = {
     avatar:
       "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
     oauth_user_id: "",
-    first_name: "Abiodun",
-    last_name: "Azeez",
-    email: "iamhabbeboy@gmail.com",
+    first_name: "",
+    last_name: "",
+    email: "",
     companies: [
       {
-        name: "Bashlabs Innovation",
+        name: "",
         logo: "",
         description: "",
       },
@@ -70,20 +70,35 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getUser.pending, (state: UserState) => {
+    builder.addCase(createUser.pending, (state: UserState) => {
       state.isLoading = true;
     });
-    builder.addCase(getUser.rejected, (state: UserState, action) => {
+    builder.addCase(createUser.rejected, (state: UserState, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
     builder.addCase(
-      getUser.fulfilled,
-      (state: UserState, action: PayloadAction<{}>) => {
+      createUser.fulfilled,
+      (state: UserState, action: PayloadAction<IUser>) => {
         state.isLoading = false;
-        // state.data = action.payload;
+        state.data = action.payload
       }
     );
+
+    // builder.addCase(updateUser.pending, (state: UserState) => {
+    //   state.isLoading = true;
+    // });
+    // builder.addCase(updateUser.rejected, (state: UserState, action) => {
+    //   state.isLoading = false;
+    //   state.error = action.error.message;
+    // });
+    // builder.addCase(
+    //   updateUser.fulfilled,
+    //   (state: UserState, action: PayloadAction<{}>) => {
+    //     state.isLoading = false;
+    //     // state.data = { ...state.data, action}
+    //   }
+    // );
   },
 });
 

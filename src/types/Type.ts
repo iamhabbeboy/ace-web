@@ -5,12 +5,12 @@ export interface IUser {
   first_name: string;
   last_name: string;
   email: string;
-  companies: ICompany[];
-  subjects: ISubject[];
-  username: string;
-  password: string;
-  created_at: string;
-  updated_at: string;
+  companies?: ICompany[];
+  subjects?: ISubject[];
+  username?: string;
+  password?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ICompany {
