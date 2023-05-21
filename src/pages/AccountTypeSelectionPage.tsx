@@ -4,9 +4,10 @@ import CompanyInfoView from "../components/onboarding/CompanyInfoView";
 import { Container, Group, Button } from "@mantine/core";
 import { IconChevronRight, IconX } from "@tabler/icons-react";
 import { useDispatch } from "react-redux";
-import { updateUser } from "../store/collections/user";
+import { updateUser } from "../store/thunks/user";
 import { useNavigate } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
+import { store } from "../store";
 
 const AccountTypeSelectionPage = () => {
     const [company, setCompanyName] = useState("");
@@ -18,9 +19,8 @@ const AccountTypeSelectionPage = () => {
         setAbout(about);
     }
 
-    const dispatcher = useDispatch()
 
-    const handleInfo = () => {
+    const handleInfo = async () => {
         if (company === "" || about === "") {
             showNotification({
                 title: "Error",
@@ -31,16 +31,17 @@ const AccountTypeSelectionPage = () => {
             return;
         }
         if (company !== "" || about !== "") {
-            dispatcher(updateUser({
+            const response = await store.dispatch(updateUser({
                 companies: [{
                     name: company,
                     logo: "",
                     description: about,
                 }],
-                id: "000000000000000000000"
+                oauth_user_id: "12345xx",
             }))
+            console.log(response.payload)
         }
-        navigate("/home")
+        // navigate("/home")
     }
 
     return (

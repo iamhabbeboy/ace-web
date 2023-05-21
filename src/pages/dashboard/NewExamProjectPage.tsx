@@ -12,7 +12,8 @@ import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { updateUser } from '../../store/collections/user';
+// import { updateUser } from '../../store/collections/user';
+import { updateUser } from "../../store/thunks/user";
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -76,9 +77,9 @@ const NewProjectPage = () => {
     }
 
     const handleNewSubject = () => {
-        dispatch(updateUser({
+        store.dispatch(updateUser({
             subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
-            id: "00000000"
+            oauth_user_id: "12345xx"
         }));
         showNotification({
             title: 'Successful',

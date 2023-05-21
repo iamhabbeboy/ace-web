@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { createUser } from "../../thunks/user";
+import { createUser, updateUser } from "../../thunks/user";
 import { ICompany, ISubject, IUser } from "../../../types/Type";
 
 export interface UserState {
@@ -8,7 +8,7 @@ export interface UserState {
   isLoading?: boolean;
 }
 
-export type UpdateUserPayload = Pick<IUser, "id"> & {
+export type UpdateUserPayload = Pick<IUser, "oauth_user_id"> & {
   first_name?: string;
   last_name?: string;
   companies?: ICompany[];
@@ -54,20 +54,8 @@ export const userSlice = createSlice({
     // getUser(state: UserState, action: PayloadAction<{}>) {
     //   return state.data;
     // },
-    updateUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
-      if (action.payload.first_name) {
-        state.data.first_name = action.payload.first_name;
-      }
-      if (action.payload.last_name) {
-        state.data.last_name = action.payload.last_name;
-      }
-      if (action.payload.subjects) {
-        state.data.subjects = action.payload.subjects;
-      }
-      if (action.payload.companies) {
-        state.data.companies = action.payload.companies || [];
-      }
-    },
+    // updateUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
+    // },
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.pending, (state: UserState) => {
@@ -81,7 +69,33 @@ export const userSlice = createSlice({
       createUser.fulfilled,
       (state: UserState, action: PayloadAction<IUser>) => {
         state.isLoading = false;
-        state.data = action.payload
+        state.data = action.payload;
+      }
+    );
+    // Update fields
+    builder.addCase(updateUser.pending, (state: UserState) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateUser.rejected, (state: UserState, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(
+      updateUser.fulfilled,
+      (state: UserState, action: PayloadAction<any>) => {
+        state.isLoading = false;
+        if (action.payload.first_name) {
+          state.data.first_name = action.payload.first_name;
+        }
+        if (action.payload.last_name) {
+          state.data.last_name = action.payload.last_name;
+        }
+        if (action.payload.subjects) {
+          state.data.subjects = action.payload.subjects;
+        }
+        if (action.payload.companies) {
+          state.data.companies = action.payload.companies || [];
+        }
       }
     );
 
@@ -101,7 +115,5 @@ export const userSlice = createSlice({
     // );
   },
 });
-
-export const { updateUser } = userSlice.actions;
 
 export default userSlice.reducer;

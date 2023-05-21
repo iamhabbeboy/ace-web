@@ -29,15 +29,15 @@ export const getUser = createAsyncThunk<
   }
 });
 
-// export const updateUserr = createAsyncThunk<
-//   UserState,
-//   UpdateUserPayload,
-//   { rejectValue: string }
-// >("user/update", async (payload, { rejectWithValue }) => {
-//   try {
-//     const { data } = await Axios.put(`/api/users/${payload.id}`, payload);
-//     return data;
-//   } catch (err: any) {
-//     return rejectWithValue(err.response.data);
-//   }
-// });
+export const updateUser = createAsyncThunk<
+  UserState,
+  UpdateUserPayload,
+  { rejectValue: string }
+>("user/update", async (payload, { rejectWithValue }) => {
+  try {
+    const { data } = await Axios.put(`/api/v1/users/${payload.oauth_user_id}`, payload);
+    return data;
+  } catch (err: any) {
+    return rejectWithValue(err.response.data);
+  }
+});
