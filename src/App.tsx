@@ -8,6 +8,7 @@ import ExamOverviewPage from './pages/dashboard/ExamOverviewPage';
 import Login from './pages/student/Login';
 import Overview from './pages/student/Overview';
 import Exam from './pages/student/Exam';
+import SignInPage from './pages/SignIn';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
+          <Route path="/signin" element={<SignInPage />} />
           <Route path="/onboarding/account" element={<AccountTypeSelectionPage />} />
           <Route path="/home" element={<DashboardHomePage />} />
           <Route path="/exams/new" element={<NewExamProjectPage />} />

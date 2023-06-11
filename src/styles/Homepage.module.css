@@ -1,0 +1,93 @@
+.Signin {
+    margin-top: 10vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .SigninCard {
+    width: 25%;
+  }
+  .Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .CardContainer {
+    padding: 5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .CardContainer > h1 {
+    text-align: center;
+    font-size: 1.75rem;
+  }
+  .SubText {
+    margin-bottom: 1.125rem;
+    text-align: center;
+    color: #6c757d;
+    margin-top: 3rem;
+  }
+  .GoogleButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 0.4px solid #c7c7c7;
+    box-sizing: border-box;
+    /* box-shadow: 0px 4px 8px -1px rgba(0, 0, 0, 0.1); */
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #797979;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+  }
+  .GoogleButton > img {
+    margin-right: 0.4rem;
+  }
+  .GoogleButton > span {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .HasAccount {
+    color: #6c757d;
+    font-size: 0.8125rem;
+  }
+  .CardContainer > a {
+    text-decoration: underline;
+    font-size: 0.8125rem;
+  }
+  @media screen and (min-width: 2500px) {
+    .SigninCard {
+      width: 15%;
+    }
+  }
+  @media screen and (max-width: 1030px) {
+    .SigninCard {
+      width: 35%;
+    }
+  }
+  @media screen and (max-width: 780px) {
+    .SigninCard {
+      width: 60%;
+    }
+    .Header {
+      width: 45%;
+    }
+  }
+@media screen and (max-width: 500px) {
+    .SigninCard {
+      width: 90%;
+    }
+    .GoogleButton {
+      font-size: 0.8rem;
+    }
+    .Header {
+      width: 55%;
+    }
+  }
+  

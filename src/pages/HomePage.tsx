@@ -1,83 +1,45 @@
-import { Button, Container, Grid, Group, Input, rem } from '@mantine/core';
-import { IconAt, IconBrandGoogle } from '@tabler/icons-react';
+import { Button, Card, Container, Grid, Group, Input, rem, createStyles, UnstyledButton } from '@mantine/core';
+import { IconAt, IconBook, IconBrandGoogle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { store } from '../store';
 import { createUser } from '../store/thunks/user';
 import { useState } from 'react';
+import googleIcon from "../assets/google.svg"
+import styles from "../styles/Homepage.module.css";
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 interface Error {
   message: string;
 }
 
+const useStyles = createStyles((theme) => ({
+  footer: {
+    color: '#666',
+    fontSize: '12px'
+  },
+  card: {
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+    // backgroundColor: theme.colors.blue,
+    textAlign: 'center',
+    width: '80%',
+    margin: '40px auto',
+  },
+  link: {
+    color: '#0c8afe',
+    fontWeight: 'bold'
+  },
+}));
+
 const HomePage = () => {
-  const [userId, setUserId] = useState("");
-  return (
-    <Container size="xs" px="xs">
-      <div>
-        <h1 className='text-5xl'>Welcome to aceTest</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab pariatur nisi quia harum aut? Pariatur porro blanditiis dignissimos, non totam veniam!</p>
-        <Grid>
-          <Grid.Col span={8}>
-            <Input
-              icon={<IconAt />}
-              placeholder="Your user ID"
-              defaultValue={"12345"}
-              onChange={(e) => setUserId(e.currentTarget.value)}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <SignInButton userId={userId} />
-          </Grid.Col>
-        </Grid>
+  const { classes } = useStyles();
 
-      </div>
-    </Container>
+  return (
+    <div>
+      <Container size="xs" px="xs" pt="lg">
+        <h1>Welcome to homepage</h1>
+      </Container>
+    </div>
   )
-}
-
-function SignInButton({ userId }: { userId: string }) {
-  const navigation = useNavigate()
-  const [error, setError] = useState("")
-
-  const handleUserLogin = async () => {
-    if (userId === "") {
-      return alert("User ID is required");
-    }
-    const result = await store.dispatch(createUser({
-      first_name: "Abiodun",
-      last_name: "Azeez",
-      id: "",
-      avatar: '',
-      oauth_user_id: userId,
-      email: 'iamhabbeboy@gmail.com',
-    }));
-
-    if (result.meta.requestStatus === "fulfilled") {
-      navigation('/onboarding/account')
-      return;
-    }
-
-    if (result.meta.requestStatus === "rejected") {
-      const msg = result.payload as Error;
-      setError(msg.message);
-    }
-  }
-
-  return (
-    <Group position="left">
-      <Button
-        component="a"
-        target="_blank"
-        rel="noopener noreferrer"
-        leftIcon={<IconBrandGoogle size={rem(18)} />}
-        variant="default"
-        onClick={handleUserLogin}
-      >
-        Sign In With Google
-      </Button>
-      <span style={{color: "#993300"}}>{error}</span>
-    </Group>
-  );
 }
 
 export default HomePage

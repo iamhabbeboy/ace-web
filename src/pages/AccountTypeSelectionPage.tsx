@@ -39,9 +39,18 @@ const AccountTypeSelectionPage = () => {
                 }],
                 oauth_user_id: "12345xx",
             }))
-            console.log(response.payload)
+            if (response.meta.requestStatus === "fulfilled") {
+               return navigate("/home")
+            } 
+            const msg = response.payload as any;
+            showNotification({
+                title: "Error",
+                message: msg.message,
+                color: "red",
+                icon: <IconX />
+            })
+            return;
         }
-        // navigate("/home")
     }
 
     return (
@@ -50,7 +59,7 @@ const AccountTypeSelectionPage = () => {
             <CompanyInfoView onHandleCompanyInfo={setCompanyInfo} />
             <Container size={"xs"}>
                 <Group position="right">
-                    <a href="/home" style={{marginTop: "10px"}}>Skip</a>
+                    <a href="/home" style={{ marginTop: "10px" }}>Skip</a>
                     <Button mt={"md"} onClick={handleInfo}>Continue <IconChevronRight /></Button>
                 </Group>
             </Container>
