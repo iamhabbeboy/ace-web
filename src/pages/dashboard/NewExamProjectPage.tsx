@@ -79,7 +79,7 @@ const NewProjectPage = () => {
     const handleNewSubject = () => {
         store.dispatch(updateUser({
             subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
-            oauth_user_id: "12345xx"
+            id: "12345xx"
         }));
         showNotification({
             title: 'Successful',

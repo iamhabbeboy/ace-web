@@ -1,10 +1,18 @@
+export interface IGoogleOauth {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    scope: string;
+    authuser?: string;
+    prompt: string;
+}
 export interface IUser {
   id: string;
-  avatar: string;
-  oauth_user_id: string;
-  first_name: string;
-  last_name: string;
+  name: string;
+  picture: string;
   email: string;
+  family_name: string;
+  given_name: string;
   companies?: ICompany[];
   subjects?: ISubject[];
   username?: string;
@@ -12,6 +20,7 @@ export interface IUser {
   created_at?: string;
   updated_at?: string;
 }
+
 
 export interface ICompany {
   name: string;

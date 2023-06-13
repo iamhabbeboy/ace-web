@@ -1,8 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IUser } from "../../types/Type";
+import { IGoogleOauth, IUser } from "../../types/Type";
 import { UpdateUserPayload, initialState } from "../collections/user";
 import { UserState } from "../collections/user/index";
 import { Axios } from "../../util/axios.lib";
+
+export const createGoogleOauthUser = async (payload: IGoogleOauth) => {
+  try {
+    const { data } = await Axios.post<IUser>("/api/v1/users", payload);
+    return data;
+  } catch (err: any) {
+    return err;
+  }
+};
 
 export const createUser = createAsyncThunk(
   "user/create",
@@ -35,7 +44,10 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >("user/update", async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await Axios.put(`/api/v1/users/${payload.oauth_user_id}`, payload);
+    const { data } = await Axios.put(
+      `/api/v1/users/${payload.id}`,
+      payload
+    );
     return data;
   } catch (err: any) {
     return rejectWithValue(err.response.data);

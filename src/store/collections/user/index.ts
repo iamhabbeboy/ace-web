@@ -8,9 +8,9 @@ export interface UserState {
   isLoading?: boolean;
 }
 
-export type UpdateUserPayload = Pick<IUser, "oauth_user_id"> & {
-  first_name?: string;
-  last_name?: string;
+export type UpdateUserPayload = Pick<IUser, "id"> & {
+  given_name?: string;
+  family_name?: string;
   companies?: ICompany[];
   subjects?: ISubject[];
 };
@@ -20,11 +20,11 @@ export const initialState: UserState = {
     id: "000000000000000000000",
     created_at: new Date().toUTCString(),
     updated_at: new Date().toUTCString(),
-    avatar:
+    name: "",
+    picture:
       "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
-    oauth_user_id: "",
-    first_name: "",
-    last_name: "",
+    given_name: "",
+    family_name: "",
     email: "",
     companies: [
       {
@@ -54,8 +54,9 @@ export const userSlice = createSlice({
     // getUser(state: UserState, action: PayloadAction<{}>) {
     //   return state.data;
     // },
-    // updateUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
-    // },
+    setUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
+      state.data = {...state.data, ...action.payload}
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createUser.pending, (state: UserState) => {
@@ -85,10 +86,10 @@ export const userSlice = createSlice({
       (state: UserState, action: PayloadAction<any>) => {
         state.isLoading = false;
         if (action.payload.first_name) {
-          state.data.first_name = action.payload.first_name;
+          state.data.given_name = action.payload.first_name;
         }
         if (action.payload.last_name) {
-          state.data.last_name = action.payload.last_name;
+          state.data.family_name = action.payload.last_name;
         }
         if (action.payload.subjects) {
           state.data.subjects = action.payload.subjects;
@@ -116,4 +117,5 @@ export const userSlice = createSlice({
   },
 });
 
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

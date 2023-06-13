@@ -32,12 +32,12 @@ const AccountTypeSelectionPage = () => {
         }
         if (company !== "" || about !== "") {
             const response = await store.dispatch(updateUser({
+                id: "",
                 companies: [{
                     name: company,
                     logo: "",
                     description: about,
-                }],
-                oauth_user_id: "12345xx",
+                }]
             }))
             if (response.meta.requestStatus === "fulfilled") {
                return navigate("/home")

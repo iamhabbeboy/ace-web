@@ -41,8 +41,8 @@ const MenuNavBar = () => {
     const { classes } = useStyles();
     const router = useNavigate()
     const user = useSelector((state: RootState) => state.account.user)
-    const name = user ? user.data.first_name : "N/A";
-    const avatar = user ? user.data.avatar: "";
+    const name = user ? user.data.given_name : "N/A";
+    const avatar = user ? user.data.picture: "";
 
     const handleLogout = () => {
         router("/")
