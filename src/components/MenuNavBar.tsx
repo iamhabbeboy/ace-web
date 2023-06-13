@@ -3,6 +3,7 @@ import { IconChevronDown } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { googleLogout } from "@react-oauth/google";
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -41,10 +42,11 @@ const MenuNavBar = () => {
     const { classes } = useStyles();
     const router = useNavigate()
     const user = useSelector((state: RootState) => state.account.user)
-    const name = user ? user.data.given_name : "N/A";
+    const name = user ? `${user.data.given_name} ${user.data.family_name}`  : "N/A";
     const avatar = user ? user.data.picture: "";
 
     const handleLogout = () => {
+        googleLogout();
         router("/")
     }
 

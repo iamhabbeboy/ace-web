@@ -7,6 +7,7 @@ import { useState } from 'react';
 import googleIcon from "../assets/google.svg"
 import styles from "../styles/Homepage.module.css";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { Link } from 'react-router-dom';
 
 interface Error {
   message: string;
@@ -37,6 +38,7 @@ const HomePage = () => {
     <div>
       <Container size="xs" px="xs" pt="lg">
         <h1>Welcome to homepage</h1>
+        <Link to="/signin">Click here to login</Link>
       </Container>
     </div>
   )
