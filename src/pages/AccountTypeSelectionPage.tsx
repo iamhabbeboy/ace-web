@@ -3,16 +3,17 @@ import MenuNavBar from "../components/MenuNavBar";
 import CompanyInfoView from "../components/onboarding/CompanyInfoView";
 import { Container, Group, Button } from "@mantine/core";
 import { IconChevronRight, IconX } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
-import { updateUser } from "../store/thunks/user";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, updateUser } from "../store/thunks/user";
 import { useNavigate } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
-import { store } from "../store";
+import { RootState, store } from "../store";
 
 const AccountTypeSelectionPage = () => {
     const [company, setCompanyName] = useState("");
     const navigate = useNavigate();
     const [about, setAbout] = useState("");
+    const user = useSelector((state: RootState) => state.account.user);
 
     const setCompanyInfo = (name: string, about: string) => {
         setCompanyName(name);
@@ -32,7 +33,7 @@ const AccountTypeSelectionPage = () => {
         }
         if (company !== "" || about !== "") {
             const response = await store.dispatch(updateUser({
-                id: "",
+                id: user.data.id,
                 companies: [{
                     name: company,
                     logo: "",

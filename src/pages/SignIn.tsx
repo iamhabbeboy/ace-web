@@ -55,6 +55,7 @@ const SignInPage = () => {
             setError("Error occured while processing user information, please try again later.");
             return;
         }
+        localStorage.setItem("oauth_token", JSON.stringify(token));
         navigation('/onboarding/account');
     }
 

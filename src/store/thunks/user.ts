@@ -44,6 +44,7 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >("user/update", async (payload, { rejectWithValue }) => {
   try {
+    console.log(payload)
     const { data } = await Axios.put(
       `/api/v1/users/${payload.id}`,
       payload

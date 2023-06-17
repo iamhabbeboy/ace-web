@@ -51,9 +51,6 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // getUser(state: UserState, action: PayloadAction<{}>) {
-    //   return state.data;
-    // },
     setUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
       state.data = {...state.data, ...action.payload}
     },
@@ -85,18 +82,18 @@ export const userSlice = createSlice({
       updateUser.fulfilled,
       (state: UserState, action: PayloadAction<any>) => {
         state.isLoading = false;
-        if (action.payload.first_name) {
-          state.data.given_name = action.payload.first_name;
-        }
-        if (action.payload.last_name) {
-          state.data.family_name = action.payload.last_name;
-        }
-        if (action.payload.subjects) {
-          state.data.subjects = action.payload.subjects;
-        }
-        if (action.payload.companies) {
-          state.data.companies = action.payload.companies || [];
-        }
+        // if (action.payload.first_name) {
+        //   state.data.given_name = action.payload.first_name;
+        // }
+        // if (action.payload.last_name) {
+        //   state.data.family_name = action.payload.last_name;
+        // }
+        // if (action.payload.subjects) {
+        //   state.data.subjects = action.payload.subjects;
+        // }
+        // if (action.payload.companies) {
+        //   state.data.companies = action.payload.companies || [];
+        // }
       }
     );
 
