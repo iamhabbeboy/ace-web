@@ -10,7 +10,6 @@ import { RootState, store } from '../../store';
 import { useState } from 'react';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
-import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 // import { updateUser } from '../../store/collections/user';
 import { updateUser } from "../../store/thunks/user";
@@ -40,7 +39,6 @@ const NewProjectPage = () => {
     const [subjects, setSubjects] = useState<string[]>([]);
     const [newSubject, setNewSubject] = useState<string>("");
 
-    const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.account.user)
     const subjectState = user.data.subjects || [];
     const subjectData = subjectState.map((subject: any) => {

@@ -6,13 +6,9 @@ import { useState } from 'react';
 import googleIcon from "../assets/google.svg"
 import styles from "../styles/Homepage.module.css";
 import { useGoogleLogin } from '@react-oauth/google';
-import { IGoogleOauth, IUser } from '../types/Type';
+import { IGoogleOauth } from '../types/Type';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/collections/user';
-
-interface Error {
-    message: string;
-}
 
 const useStyles = createStyles((theme) => ({
     body: {
