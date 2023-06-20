@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MenuNavBar from "../components/MenuNavBar";
 import CompanyInfoView from "../components/onboarding/CompanyInfoView";
-import { Container, Group, Button } from "@mantine/core";
+import { Container, Group, Button, UnstyledButton } from "@mantine/core";
 import { IconChevronRight, IconX } from "@tabler/icons-react";
 import { useSelector } from "react-redux";
 import { updateUser } from "../store/thunks/user";
@@ -20,6 +20,31 @@ const AccountTypeSelectionPage = () => {
         setAbout(about);
     }
 
+    const makeRequest = async (company = "", about = "") => {
+        const response = await store.dispatch(updateUser({
+            id: user.data.id,
+            onboarding: true,
+            companies: [{
+                name: company,
+                logo: "",
+                description: about,
+            }]
+        }))
+        if (response.meta.requestStatus === "fulfilled") {
+           return navigate("/home")
+        } 
+        const msg = response.payload as any;
+        showNotification({
+            title: "Error",
+            message: msg.message,
+            color: "red",
+            icon: <IconX />
+        })
+    }
+
+    const handleSkip = async () => {
+        makeRequest()
+    }
 
     const handleInfo = async () => {
         if (company === "" || about === "") {
@@ -32,24 +57,7 @@ const AccountTypeSelectionPage = () => {
             return;
         }
         if (company !== "" || about !== "") {
-            const response = await store.dispatch(updateUser({
-                id: user.data.id,
-                companies: [{
-                    name: company,
-                    logo: "",
-                    description: about,
-                }]
-            }))
-            if (response.meta.requestStatus === "fulfilled") {
-               return navigate("/home")
-            } 
-            const msg = response.payload as any;
-            showNotification({
-                title: "Error",
-                message: msg.message,
-                color: "red",
-                icon: <IconX />
-            })
+            makeRequest(company, about)
             return;
         }
     }
@@ -60,7 +68,7 @@ const AccountTypeSelectionPage = () => {
             <CompanyInfoView onHandleCompanyInfo={setCompanyInfo} />
             <Container size={"xs"}>
                 <Group position="right">
-                    <a href="/home" style={{ marginTop: "10px" }}>Skip</a>
+                    <UnstyledButton style={{ marginTop: "10px", textDecoration: "underline" }} onClick={handleSkip}>Skip</UnstyledButton>
                     <Button mt={"md"} onClick={handleInfo}>Continue <IconChevronRight /></Button>
                 </Group>
             </Container>

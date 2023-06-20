@@ -48,23 +48,23 @@ const NewProjectPage = () => {
     const navigate = useNavigate();
     const handleSubmitAction = async (e: any) => {
         e.preventDefault();
-        const response = await store.dispatch(createExam({
-            name: name,
-            description: description,
-            student_count: studentCount,
-            subject_slugs: subjects,
-        }));
+        // const response = await store.dispatch(createExam({
+        //     name: name,
+        //     description: description,
+        //     student_count: studentCount,
+        //     subject_slugs: subjects,
+        // }));
 
-        if (createExam.fulfilled.match(response)) {
-            navigate(`/exams/${response.payload.id}`);
-            return;
-        }
-        showNotification({
-            title: 'Error Occured',
-            message: 'An error occured while creating exam project',
-            color: 'red',
-            icon: <IconX />
-        });
+        // if (createExam.fulfilled.match(response)) {
+        //     navigate(`/exams/${response.payload.id}`);
+        //     return;
+        // }
+        // showNotification({
+        //     title: 'Error Occured',
+        //     message: 'An error occured while creating exam project',
+        //     color: 'red',
+        //     icon: <IconX />
+        // });
     }
 
     const handleSubjectSelection = (value: string[]) => {
@@ -75,10 +75,10 @@ const NewProjectPage = () => {
     }
 
     const handleNewSubject = () => {
-        store.dispatch(updateUser({
-            subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
-            id: "12345xx"
-        }));
+        // store.dispatch(updateUser({
+        //     subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
+        //     id: "12345xx"
+        // }));
         showNotification({
             title: 'Successful',
             message: 'New subject added',

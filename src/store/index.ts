@@ -3,15 +3,18 @@ import logger from 'redux-logger'
 import rootReducer from "./collections"
 import storageSession from 'redux-persist/lib/storage/session' 
 import { persistStore, persistReducer } from 'redux-persist'
+import { checkUserAccountType } from '../middleware/checkUserAccountType';
  
 const persistConfig = {
   key: 'root',
+  version: 1,
   storage: storageSession,
+  // blacklist: [""],
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false, }).concat(logger, checkUserAccountType),
   devTools: process.env.NODE_ENV !== "production",
 });
 const persistor = persistStore(store)

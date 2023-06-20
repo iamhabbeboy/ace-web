@@ -2,8 +2,10 @@ import { Avatar, Center, Container, createStyles, Group, Header, Menu, rem, Unst
 import { IconChevronDown } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { persistor, RootState } from "../store";
 import { googleLogout } from "@react-oauth/google";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../store/collections/user";
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -41,13 +43,19 @@ const useStyles = createStyles((theme) => ({
 const MenuNavBar = () => {
     const { classes } = useStyles();
     const router = useNavigate()
+    const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.account.user)
     const name = user ? `${user.data.given_name} ${user.data.family_name}`  : "N/A";
     const avatar = user ? user.data.picture: "";
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await dispatch(logoutUser);
+        persistor.purge().then(() => {
+            sessionStorage.clear();
+        });
         googleLogout();
-        router("/")
+        window.location.href = "/"
+        // router("/")
     }
 
     const handleHomeLink = () => {

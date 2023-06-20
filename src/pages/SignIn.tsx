@@ -46,7 +46,7 @@ const SignInPage = () => {
 
     const handleAuthentication = async (token: IGoogleOauth) => {
         const response = await createGoogleOauthUser(token)
-        const result = dispatch(setUser(response));
+        const result = await dispatch(setUser(response));
         if(!result.payload.id) {
             setError("Error occured while processing user information, please try again later.");
             return;
