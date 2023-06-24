@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { createExam } from "../../thunks/exam";
+import { createExam, fetchExam } from "../../thunks/exam";
 import { IExam, IQuestion } from "../../../types/Type";
 
 export interface ExamState {
@@ -48,20 +48,18 @@ export const examSlice = createSlice({
       state.data.push(action.payload as IExam);
     });
 
-    //   builder.addCase(updateExam.pending, (state: ExamState) => {
-    //     state.isLoading = true;
-    //   });
-    //   builder.addCase(updateExam.rejected, (state: ExamState, action) => {
-    //     state.isLoading = false;
-    //     state.error = action.error.message;
-    //   });
-    //   builder.addCase(updateExam.fulfilled, (state: ExamState, action) => {
-    //     state.isLoading = false;
-    //     // const index = state.data.findIndex(
-    //     //   (item) => item.id === action.payload.id
-    //     // );
-    //     console.log(action.payload)
-    //     console.log(state.data)
+      builder.addCase(fetchExam.pending, (state: ExamState) => {
+        state.isLoading = true;
+      });
+      builder.addCase(fetchExam.rejected, (state: ExamState, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+      builder.addCase(fetchExam.fulfilled, (state: ExamState, action: any) => {
+        state.isLoading = false;
+        state.data = [];
+        state.data = action.payload;
+      });
     //     // state.data[index].questions = [...state.data[index].questions, ...action.payload.questions] || [];
     //       // state.data[index].questions = [
     //       //   ...state.data[index].questions,

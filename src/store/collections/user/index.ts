@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { createUser, updateUser } from "../../thunks/user";
-import { ICompany, ISubject, IUser } from "../../../types/Type";
+import { ICompany, IUser } from "../../../types/Type";
+import { hyphinize } from "../../../util/string";
 
 export interface UserState {
   data: IUser;
@@ -13,7 +14,7 @@ export type UpdateUserPayload = Pick<IUser, "id"> & {
   given_name?: string;
   family_name?: string;
   companies?: ICompany[];
-  subjects?: ISubject[];
+  subject_slugs?: string[];
 };
 
 export const initialState: UserState = {
@@ -35,13 +36,7 @@ export const initialState: UserState = {
         description: "",
       },
     ],
-    subjects: [
-      {
-        name: "English",
-        slug: "english",
-        description: "",
-      },
-    ],
+    subject_slugs: ["english"],
     username: "",
     password: "",
   },
@@ -57,7 +52,15 @@ export const userSlice = createSlice({
       state.data = undefined;
     },
     setUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
-      state.data = {...state.data, ...action.payload}
+      state.data = { ...state.data, ...action.payload };
+    },
+    addSubject(state: UserState, action: PayloadAction<UpdateUserPayload>) {
+      const subjects = state.data.subject_slugs || [];
+      let data = action.payload?.subject_slugs && action.payload?.subject_slugs[0];
+      data = hyphinize(data as string);
+      if (!subjects.includes(data)) {
+        state.data.subject_slugs?.push(data);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -83,27 +86,23 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message;
     });
-    builder.addCase(
-      updateUser.fulfilled,
-      (state: UserState, action) => {
-        state.isLoading = false;
-        // state.data = {...state.data, ...action.payload}
-         if (action.payload.data.given_name) {
-          state.data.given_name = action.payload.data.given_name;
-        }
-        if (action.payload.data.family_name) {
-          state.data.family_name = action.payload.data.family_name;
-        }
-        // if (action.payload.data.onboarding) {
-        //   state.data.onboarding = action.payload.data.onboarding;
-        // }
-        if (action.payload.data.companies) {
-          state.data.companies = action.payload.data.companies || [];
-        }
+    builder.addCase(updateUser.fulfilled, (state: UserState, action) => {
+      state.isLoading = false;
+      if (action.payload.data.given_name) {
+        state.data.given_name = action.payload.data.given_name;
       }
-    );
+      if (action.payload.data.family_name) {
+        state.data.family_name = action.payload.data.family_name;
+      }
+      if (action.payload.data.onboarding) {
+        state.data.onboarding = action.payload.data.onboarding;
+      }
+      if (action.payload.data.companies) {
+        state.data.companies = action.payload.data.companies || [];
+      }
+    });
   },
 });
 
-export const { setUser, logoutUser } = userSlice.actions;
+export const { setUser, logoutUser, addSubject } = userSlice.actions;
 export default userSlice.reducer;

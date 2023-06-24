@@ -15,7 +15,7 @@ export interface IUser {
   family_name: string;
   given_name: string;
   companies?: ICompany[];
-  subjects?: ISubject[];
+  subject_slugs?: string[];
   username?: string;
   password?: string;
   created_at?: string;
@@ -62,4 +62,13 @@ export interface IOptions {
   label: string;
   content: string;
   content_html?: string;
+}
+
+export interface UserToken {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  authuser: string;
+  prompt: string;
 }

@@ -52,7 +52,10 @@ const SignInPage = () => {
             return;
         }
         localStorage.setItem("oauth_token", JSON.stringify(token));
-        navigation('/onboarding/account');
+        if(result.payload.onboarding) {
+            return navigation('/home')
+        }
+        return navigation('/onboarding/account');
     }
 
     const login = useGoogleLogin({

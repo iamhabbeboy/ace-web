@@ -6,7 +6,7 @@ import { Axios } from "../../util/axios.lib";
 
 export const createGoogleOauthUser = async (payload: IGoogleOauth) => {
   try {
-    const { data } = await Axios.post<IUser>("/api/v1/users", payload);
+    const { data } = await Axios.post<IUser>("/users", payload);
     return data;
   } catch (err: any) {
     return err;
@@ -17,7 +17,7 @@ export const createUser = createAsyncThunk(
   "user/create",
   async (payload: IUser, { rejectWithValue }) => {
     try {
-      const { data } = await Axios.post<IUser>("/api/v1/users", payload);
+      const { data } = await Axios.post<IUser>("/users", payload);
       return data;
     } catch (err: any) {
       return rejectWithValue(err.response.data);
@@ -40,12 +40,12 @@ export const getUser = createAsyncThunk<
 
 export const updateUser = createAsyncThunk<
   UserState,
-  Partial<IUser>,
+  UpdateUserPayload,
   { rejectValue: string }
 >("user/update", async (payload, { rejectWithValue }) => {
   try {
     const { data } = await Axios.put(
-      `/api/v1/users/${payload.id}`,
+      `/users/${payload.id}`,
       payload
     );
     return data;

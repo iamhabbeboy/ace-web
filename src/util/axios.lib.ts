@@ -1,4 +1,13 @@
-import axios from "axios"
-export const Axios = axios.create({
-    baseURL: process.env.API_URL || "http://localhost:9200"
-})
+import axios from "axios";
+import { getToken } from "./common";
+
+const request = axios.create({
+  baseURL: process.env.REACT_APP_API_URI || "http://localhost:9200/api/v1",
+});
+
+// request.interceptors.request.use((config) => {
+//   config.headers.Authorization = `Bearer ${getToken()}`;
+//   return config;
+// });
+
+export const Axios = request;

@@ -11,8 +11,7 @@ import { useState } from 'react';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
 import { useSelector } from 'react-redux';
-// import { updateUser } from '../../store/collections/user';
-import { updateUser } from "../../store/thunks/user";
+import { addSubject } from '../../store/collections/user';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -38,33 +37,37 @@ const NewProjectPage = () => {
     const [studentCount, setStudentCount] = useState<string>("0-50");
     const [subjects, setSubjects] = useState<string[]>([]);
     const [newSubject, setNewSubject] = useState<string>("");
-
+    
     const user = useSelector((state: RootState) => state.account.user)
-    const subjectState = user.data.subjects || [];
+    const subjectState = user.data.subject_slugs || [];
     const subjectData = subjectState.map((subject: any) => {
-        return { value: subject.name, label: subject.name }
+        return { value: hyphinize(subject), label: subject }
     })
 
     const navigate = useNavigate();
-    const handleSubmitAction = async (e: any) => {
+    const handleSubmitAction = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // const response = await store.dispatch(createExam({
-        //     name: name,
-        //     description: description,
-        //     student_count: studentCount,
-        //     subject_slugs: subjects,
-        // }));
+        const response = await store.dispatch(createExam({
+            user_id: user.data.id,
+            name: name,
+            description: description,
+            student_count: studentCount,
+            subject_slugs: subjects,
+        }));
 
-        // if (createExam.fulfilled.match(response)) {
-        //     navigate(`/exams/${response.payload.id}`);
-        //     return;
-        // }
-        // showNotification({
-        //     title: 'Error Occured',
-        //     message: 'An error occured while creating exam project',
-        //     color: 'red',
-        //     icon: <IconX />
-        // });
+        if (createExam.fulfilled.match(response)) {
+            navigate(`/exams/${response.payload.id}`);
+            return;
+        }
+        if (createExam.rejected.match(response)) {
+            showNotification({
+                title: 'Error Occured',
+                message: response.payload as string,
+                color: 'red',
+                icon: <IconX />
+            });
+            return;
+        }
     }
 
     const handleSubjectSelection = (value: string[]) => {
@@ -74,11 +77,15 @@ const NewProjectPage = () => {
         setSubjects(subjects);
     }
 
+    const handleCancel = () => {
+        return navigate("/home")
+    }
+
     const handleNewSubject = () => {
-        // store.dispatch(updateUser({
-        //     subjects: [...subjectState, { name: newSubject, slug: hyphinize(newSubject), description: "" }],
-        //     id: "12345xx"
-        // }));
+        store.dispatch(addSubject({
+            id: user.data.id,
+            subject_slugs: [hyphinize(newSubject)],
+        }));
         showNotification({
             title: 'Successful',
             message: 'New subject added',
@@ -144,7 +151,7 @@ const NewProjectPage = () => {
 
                         </div>
                         <Group position="right">
-                            <Button mt={"md"} size={"md"} variant="outline"><IconChevronLeft />Cancel </Button>
+                            <Button mt={"md"} size={"md"} variant="outline" onClick={handleCancel}><IconChevronLeft />Cancel </Button>
                             <Button mt={"md"} size={"md"} type="submit">Create Project <IconChevronRight /></Button>
                         </Group>
                     </form>

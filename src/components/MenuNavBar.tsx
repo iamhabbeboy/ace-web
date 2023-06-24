@@ -54,6 +54,7 @@ const MenuNavBar = () => {
             sessionStorage.clear();
         });
         googleLogout();
+        localStorage.removeItem("oauth_token");
         window.location.href = "/"
         // router("/")
     }

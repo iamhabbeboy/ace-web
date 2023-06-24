@@ -5,8 +5,11 @@ import Footer from "../../components/Footer"
 import { useNavigate } from "react-router-dom"
 import { IconAlertCircle, IconTrash } from "@tabler/icons-react"
 import { useSelector } from "react-redux"
-import { RootState } from "../../store"
+import { AppDispatch, RootState } from "../../store"
 import { IExam } from '../../types/Type';
+import { useDispatch } from "react-redux"
+import { fetchExam } from "../../store/thunks/exam"
+import { useEffect } from "react"
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -44,7 +47,7 @@ const TableLayout = ({ data }: any) => {
             <td>{index + 1}</td>
             <td>{exam.name}</td>
             <td>{exam.description}</td>
-            <td>{exam.subject_slugs.join(",")}</td>
+            <td>{exam.subject_slugs && exam.subject_slugs.length > 0 ? exam.subject_slugs.join(",") : ""}</td>
             <td>{exam.student_count}</td>
             <td>{exam.created_at}</td>
             <td>
@@ -97,10 +100,14 @@ const NoExam = () => {
 const DashboardHomePage = () => {
     const { classes } = useStyles();
     // const [opened, { open, close }] = useDisclosure(false);
-
+    const dispatch = useDispatch<AppDispatch>();
     const exams = useSelector((state: RootState) => state.account.exam)
+    useEffect(() => {
+        dispatch(fetchExam());
+    }, [dispatch]);
+
     const examData = exams.data;
-    const hasExamData = examData.length > 0;
+    const hasExamData = examData && examData.length > 0;
     const navigate = useNavigate();
 
     const handleNewProject = async () => {
