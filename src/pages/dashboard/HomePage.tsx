@@ -1,4 +1,4 @@
-import { Alert, Button, Container, createStyles, Group, Image, rem, Table, UnstyledButton } from "@mantine/core"
+import { Alert, Badge, Button, Container, createStyles, Flex, Group, Image, rem, Table, UnstyledButton } from "@mantine/core"
 import MenuNavBar from "../../components/MenuNavBar"
 import emptyImage from "../../assets/empty-exam-image.svg"
 import Footer from "../../components/Footer"
@@ -48,7 +48,14 @@ const TableLayout = ({ data }: any) => {
             <td>{index + 1}</td>
             <td>{exam.name}</td>
             <td>{exam.description}</td>
-            <td>{exam.subject_slugs && exam.subject_slugs.length > 0 ? exam.subject_slugs.join(",") : ""}</td>
+            <td>
+                {exam.subject_slugs && exam.subject_slugs.length > 0 ?
+                    exam.subject_slugs.map((ex) => {
+                        return <Badge mr={2}>{ex}</Badge>
+                    })
+                    : ""
+                }
+            </td>
             <td>{exam.student_count}</td>
             <td>{exam.created_at}</td>
             <td>
@@ -112,7 +119,7 @@ const DashboardHomePage = () => {
         const response = await dispatch(fetchExam());
         if (axios.isAxiosError(response.payload)) {
             const err: AxiosError = response.payload;
-            if(err.response?.status === 401) {
+            if (err.response?.status === 401) {
                 window.location.href = "/signin"
             }
         }
@@ -131,13 +138,15 @@ const DashboardHomePage = () => {
         <>
             <MenuNavBar />
             <Container size={"xl"} mt={20}>
-                <Alert mb={10} icon={<IconAlertCircle size="1rem" />} title="Bummer!" color="blue">
-                    Something terrible happened! You made a mistake and there is no going back, your data was lost forever!
-                </Alert>
-                {hasExamData &&
-                    <Group position="right">
-                        <Button size="sm" mb={5} onClick={handleNewProject}>Add Project</Button>
-                    </Group>
+                {!hasExamData && <Alert mb={10} icon={<IconAlertCircle size="1rem" />} title="Oops!" color="blue">
+                    There seems not to be any project available to display at this time!
+                </Alert>}
+                {hasExamData && <>
+                    <Flex justify="space-between">
+                        <h2>Projects</h2>
+                        <Button size="sm" mt={20} onClick={handleNewProject}>Add Project</Button>
+                    </Flex>
+                </>
                 }
                 <div className={classes.section}>
                     {hasExamData ? <TableLayout data={examData} /> : null}

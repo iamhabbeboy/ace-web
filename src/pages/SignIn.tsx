@@ -2,13 +2,14 @@ import { Card, Container, Group, rem, createStyles, UnstyledButton } from '@mant
 import { IconBook } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { createGoogleOauthUser } from '../store/thunks/user';
-import { useState } from 'react';
 import googleIcon from "../assets/google.svg"
 import styles from "../styles/Homepage.module.css";
 import { useGoogleLogin } from '@react-oauth/google';
 import { IGoogleOauth } from '../types/Type';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../store/collections/user';
+import { selectUser } from '../store/selectors';
+import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     body: {
@@ -61,6 +62,13 @@ const SignInPage = () => {
     const login = useGoogleLogin({
         onSuccess: tokenResponse => handleAuthentication(tokenResponse),
     });
+
+    const user = useSelector(selectUser)
+    // useEffect(() => {
+    //   if(user.token) {
+    //     window.location.href = "/home"
+    //   }
+    // }, [user]);
 
     return (
         <div className={classes.body}>

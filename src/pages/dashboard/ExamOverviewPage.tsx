@@ -122,7 +122,7 @@ const ExamOverviewPage = () => {
             key={item.label}
             onClick={(event) => {
                 event.preventDefault();
-                setView({ component: item.component, props: {}})
+                setView({ component: item.component, props: {...exam}})
                 setActive(item.label);
             }}
         >
@@ -149,7 +149,7 @@ const ExamOverviewPage = () => {
                             </Navbar.Section>
                         </Navbar>
                     </Grid.Col>
-                    <Grid.Col span={9}>
+                    <Grid.Col span={9} style={{overflow: "scroll"}}>
                         {renderTabView()}
                     </Grid.Col>
                 </Grid>

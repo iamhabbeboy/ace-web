@@ -48,7 +48,6 @@ const NewProjectPage = () => {
     const handleSubmitAction = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response = await store.dispatch(createExam({
-            user_id: user.data.id,
             name: name,
             description: description,
             student_count: studentCount,

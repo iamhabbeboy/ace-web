@@ -40,7 +40,6 @@ export interface IExam {
   created_at: string;
   updated_at: string;
   expired_at: string;
-  user_id: string;
   subject_slugs: string[];
   questions: IQuestion[];
 }

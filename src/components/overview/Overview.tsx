@@ -2,6 +2,8 @@ import { Card, createStyles, rem, Divider, Group, Switch } from '@mantine/core';
 import TableSelection from '../Table';
 import { IconCopy } from '@tabler/icons-react';
 import { IExam } from '../../types/Type';
+import { Bar } from 'react-chartjs-2';
+import { data, options } from '../../lib/chart';
 const useStyles = createStyles((theme) => ({
     section: {
         padding: theme.spacing.md,
@@ -26,14 +28,16 @@ const Overview = ({ exam }: OverviewProps) => {
                         label="Exam Mode"
                     />
                     <p style={{fontSize: "12px", color: "gray",  cursor: "pointer", textAlign: "right"}}>
-                        <IconCopy size={13}/> http://bashlabs.acetest.com/c4kefjksdfkcuks</p>
+                        <IconCopy size={13}/> http://bashlabs.acetest.com/{exam.student_login_uri || ""}</p>
                 </div>
             </Group>
             <Card withBorder radius="md" mb={20}>
                 <b>Data</b>
                 <Divider />
                 <Card.Section>
-                    dfsdf
+                    <div>
+                        <Bar options={options} data={data} />
+                    </div>
                 </Card.Section>
             </Card>
 

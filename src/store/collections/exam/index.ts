@@ -45,6 +45,7 @@ export const examSlice = createSlice({
     });
     builder.addCase(createExam.fulfilled, (state: ExamState, action) => {
       state.isLoading = false;
+      state.data = state.data || [];
       state.data.push(action.payload as IExam);
     });
 

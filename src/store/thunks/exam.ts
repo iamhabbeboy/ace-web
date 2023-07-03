@@ -4,11 +4,16 @@ import { Axios } from "../../util/axios.lib";
 import axios, { AxiosError } from "axios";
 import { getToken } from "../../util/common";
 
+const token = getToken();
+const headers = {
+    Authorization: `Bearer ${token}`
+}
+
 export const createExam = createAsyncThunk(
   "exam/create",
   async (payload: Partial<IExam>, { rejectWithValue }) => {
     try {
-      const { data } = await Axios.post<IExam>("/exams", payload);
+      const { data } = await Axios.post<IExam>("/exams", payload, {headers});
       return data;
     } catch (err) {
       let error = err;
@@ -23,10 +28,6 @@ export const createExam = createAsyncThunk(
 
 export const fetchExam = createAsyncThunk("exam/get", async (_, { rejectWithValue }) => {
   try {
-    const token = getToken();
-    const headers = {
-        Authorization: `Bearer ${token}`
-    }
     const { data } = await Axios.get<IExam>("/exams", { headers });
     return data;
   } catch (err) {
