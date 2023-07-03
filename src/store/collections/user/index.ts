@@ -20,6 +20,7 @@ export type UpdateUserPayload = Pick<IUser, "id"> & {
 export const initialState: UserState = {
   data: {
     id: "000000000000000000000",
+    token: "",
     created_at: new Date().toUTCString(),
     updated_at: new Date().toUTCString(),
     name: "",
@@ -51,7 +52,7 @@ export const userSlice = createSlice({
     logoutUser(state: any, action: PayloadAction<UpdateUserPayload>) {
       state.data = undefined;
     },
-    setUser(state: UserState, action: PayloadAction<UpdateUserPayload>) {
+    setUser(state: UserState, action: PayloadAction<IUser>) {
       state.data = { ...state.data, ...action.payload };
     },
     addSubject(state: UserState, action: PayloadAction<UpdateUserPayload>) {

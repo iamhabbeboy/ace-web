@@ -3,10 +3,12 @@ import { IGoogleOauth, IUser } from "../../types/Type";
 import { UpdateUserPayload, initialState } from "../collections/user";
 import { UserState } from "../collections/user/index";
 import { Axios } from "../../util/axios.lib";
+import axios from "axios";
 
 export const createGoogleOauthUser = async (payload: IGoogleOauth) => {
   try {
-    const { data } = await Axios.post<IUser>("/users", payload);
+    const host = process.env.REACT_APP_API_URI || "http://localhost:9200";
+    const { data } = await axios.post<IUser>(`${host}/signin`, payload);
     return data;
   } catch (err: any) {
     return err;

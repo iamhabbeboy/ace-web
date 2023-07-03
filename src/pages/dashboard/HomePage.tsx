@@ -9,7 +9,8 @@ import { AppDispatch, RootState } from "../../store"
 import { IExam } from '../../types/Type';
 import { useDispatch } from "react-redux"
 import { fetchExam } from "../../store/thunks/exam"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
+import axios, { AxiosError } from "axios"
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -97,18 +98,30 @@ const NoExam = () => {
     )
 }
 
+
+
 const DashboardHomePage = () => {
     const { classes } = useStyles();
-    // const [opened, { open, close }] = useDisclosure(false);
     const dispatch = useDispatch<AppDispatch>();
     const exams = useSelector((state: RootState) => state.account.exam)
-    useEffect(() => {
-        dispatch(fetchExam());
-    }, [dispatch]);
-
     const examData = exams.data;
     const hasExamData = examData && examData.length > 0;
     const navigate = useNavigate();
+
+    const fetchExamData = useCallback(async () => {
+        const response = await dispatch(fetchExam());
+        if (axios.isAxiosError(response.payload)) {
+            const err: AxiosError = response.payload;
+            if(err.response?.status === 401) {
+                window.location.href = "/signin"
+            }
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        fetchExamData();
+    }, [fetchExamData]);
+
 
     const handleNewProject = async () => {
         navigate("/exams/new")

@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IExam } from "../../types/Type";
 import { Axios } from "../../util/axios.lib";
 import axios, { AxiosError } from "axios";
+import { getToken } from "../../util/common";
 
 export const createExam = createAsyncThunk(
   "exam/create",
@@ -20,12 +21,16 @@ export const createExam = createAsyncThunk(
   }
 );
 
-export const fetchExam = createAsyncThunk("exam/get", async () => {
+export const fetchExam = createAsyncThunk("exam/get", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await Axios.get<IExam>("/exams");
+    const token = getToken();
+    const headers = {
+        Authorization: `Bearer ${token}`
+    }
+    const { data } = await Axios.get<IExam>("/exams", { headers });
     return data;
-  } catch (err: any) {
-    // return rejectWithValue("error occured");
+  } catch (err) {
+    return rejectWithValue(err);
   }
 });
 

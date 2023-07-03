@@ -11,6 +11,7 @@ export interface IUser {
   name: string;
   picture: string;
   email: string;
+  token: string;
   onboarding: boolean,
   family_name: string;
   given_name: string;
