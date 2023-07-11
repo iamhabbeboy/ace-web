@@ -67,7 +67,7 @@ const MenuNavBar = () => {
         <Header height={56} mb={20}>
             <Container size={"xl"}>
                 <div className={classes.inner}>
-                    <UnstyledButton onClick={handleHomeLink}>Logo</UnstyledButton>
+                    <UnstyledButton onClick={handleHomeLink}><img src="https://res.cloudinary.com/denj7z5ec/image/upload/v1688521251/Screenshot_2023-07-05_at_2.38.59_AM-removebg-preview_wlce52.png" alt="" width="50" height="50" /></UnstyledButton>
                     <Group spacing={5}>
                         <a
                             href={"/"}

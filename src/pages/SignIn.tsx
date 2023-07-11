@@ -54,7 +54,8 @@ const SignInPage = () => {
         }
         localStorage.setItem("oauth_token", result.payload.token);
         if(result.payload.onboarding) {
-            return navigation('/home')
+            return window.location.href = "/home";
+            // return navigation('/home')
         }
         return navigation('/onboarding/account');
     }
