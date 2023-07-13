@@ -6,6 +6,8 @@ import { Axios } from "../../util/axios.lib";
 import axios, { AxiosError } from "axios";
 import { IUser } from "../../types/Type";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/collections/user";
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -24,6 +26,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('')
     const router = useNavigate()
+    const dispatch = useDispatch();
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
@@ -32,6 +35,7 @@ const Login = () => {
             const { data } = await axios.post<IUser>(`${host}/api/student_signin`, payload);
             if(data) {
                 const token = data.token;
+                await dispatch(setUser(data));
                 localStorage.setItem("acetest_portal_token", token);
                 return router("/overview")
             }

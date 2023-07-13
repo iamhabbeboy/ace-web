@@ -8,7 +8,7 @@ import axios from "axios";
 export const createGoogleOauthUser = async (payload: IGoogleOauth) => {
   try {
     const host = process.env.REACT_APP_API_URI || "http://localhost:9200";
-    const { data } = await axios.post<IUser>(`${host}/signin`, payload);
+    const { data } = await axios.post<IUser>(`${host}/api/signin`, payload);
     return data;
   } catch (err: any) {
     return err;
