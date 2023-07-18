@@ -1,10 +1,6 @@
-import { Alert, Avatar, Badge, Container, Text, Group, ScrollArea, Select, Table, createStyles, Checkbox, Button, SimpleGrid, Divider } from "@mantine/core"
-import { IconChevronDownRight, IconChevronRight, IconInfoCircle } from "@tabler/icons-react";
-import { data } from "../../lib/chart";
-import { Key } from "react";
+import { Alert, Badge, Container, Text, Group, ScrollArea, Table, createStyles, Checkbox, Button, Divider } from "@mantine/core"
+import { IconChevronRight, IconInfoCircle } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -28,7 +24,7 @@ const Overview = () => {
             role: "Manager"
         }
     ];
-    const user = useSelector((state: RootState) => state.account.user)
+    // const user = useSelector((state: RootState) => state.account.user)
     const navigation = useNavigate();
     const handleStart = () => {
         return navigation("/exam")

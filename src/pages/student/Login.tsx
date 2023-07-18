@@ -2,8 +2,7 @@ import { Button, Container, Input, PasswordInput, Text, createStyles } from "@ma
 import { showNotification } from "@mantine/notifications";
 import { IconAsterisk, IconChevronRight, IconUser, IconX } from "@tabler/icons-react";
 import { useState } from "react";
-import { Axios } from "../../util/axios.lib";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { IUser } from "../../types/Type";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";

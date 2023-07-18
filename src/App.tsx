@@ -19,8 +19,8 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/onboarding/account" element={<AccountTypeSelectionPage />} />
           <Route path="/home" element={<DashboardHomePage />} />
-          <Route path="/exams/new" element={<NewExamProjectPage />} />
-          <Route path="/exams/:examId" element={<ExamOverviewPage />} />
+          <Route path="/projects/new" element={<NewExamProjectPage />} />
+          <Route path="/projects/:examId" element={<ExamOverviewPage />} />
           <Route path="*" element={<Error404Page />} />
           {/* Student Portal */}
           <Route path="/login" element={<Login />} />

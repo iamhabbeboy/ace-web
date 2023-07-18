@@ -40,7 +40,7 @@ const useStyles = createStyles((theme) => ({
 const TableLayout = ({ data }: any) => {
     const navigate = useNavigate();
     const handleViewProject = (id: string) => {
-        navigate(`/exams/${id}`)
+        navigate(`/projects/${id}`)
     }
     const { classes } = useStyles();
     const rows = data.map((exam: IExam, index: number) => (
@@ -56,7 +56,6 @@ const TableLayout = ({ data }: any) => {
                     : ""
                 }
             </td>
-            <td>{exam.student_count}</td>
             <td>{exam.created_at}</td>
             <td>
                 <Group>
@@ -79,7 +78,6 @@ const TableLayout = ({ data }: any) => {
                     <th>Project Name</th>
                     <th>Description</th>
                     <th>Subjects</th>
-                    <th>Total Student</th>
                     <th>Date</th>
                     <th>Options</th>
                 </tr>
@@ -93,7 +91,7 @@ const NoExam = () => {
     const navigate = useNavigate();
     const { classes } = useStyles();
     const handleNewProject = async () => {
-        navigate("/exams/new")
+        navigate("/projects/new")
     }
     return (
         <div className={classes.noexam}>
@@ -131,7 +129,7 @@ const DashboardHomePage = () => {
 
 
     const handleNewProject = async () => {
-        navigate("/exams/new")
+        navigate("/projects/new")
     }
 
     return (

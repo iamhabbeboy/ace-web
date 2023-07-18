@@ -35,7 +35,6 @@ export interface IExam {
   name: string;
   student_login_uri: string;
   description: string;
-  student_count: string;
   created_by: string;
   created_at: string;
   updated_at: string;

@@ -1,17 +1,13 @@
-import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, Select, UnstyledButton, MultiSelect } from '@mantine/core';
+import { Button, Text, Container, createStyles, Input, rem, Group, Textarea, UnstyledButton } from '@mantine/core';
 import MenuNavBar from "../../components/MenuNavBar"
 import Footer from "../../components/Footer"
-import { IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
-import ModalView from '../../components/Modal';
-import { useDisclosure } from '@mantine/hooks';
+import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { createExam } from '../../store/thunks/exam';
-import { RootState, store } from '../../store';
+import { store } from '../../store';
 import { useState } from 'react';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
-import { useSelector } from 'react-redux';
-import { addSubject } from '../../store/collections/user';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -31,31 +27,25 @@ const useStyles = createStyles((theme) => ({
 
 const NewProjectPage = () => {
     const { classes } = useStyles();
-    const [opened, { open, close }] = useDisclosure(false);
+    // const [opened, { open, close }] = useDisclosure(false);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [studentCount, setStudentCount] = useState<string>("0-50");
-    const [subjects, setSubjects] = useState<string[]>([]);
-    const [newSubject, setNewSubject] = useState<string>("");
-    
-    const user = useSelector((state: RootState) => state.account.user)
-    const subjectState = user.data.subject_slugs || [];
-    const subjectData = subjectState.map((subject: any) => {
-        return { value: hyphinize(subject), label: subject }
-    })
+    const [courseList, setCourseList] = useState<string[]>([""]);
+
+    // const user = useSelector((state: RootState) => state.account.user)
 
     const navigate = useNavigate();
     const handleSubmitAction = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const courses = courseList.map((course) => hyphinize(course));
         const response = await store.dispatch(createExam({
             name: name,
             description: description,
-            student_count: studentCount,
-            subject_slugs: subjects,
+            subject_slugs: courses,
         }));
 
         if (createExam.fulfilled.match(response)) {
-            navigate(`/exams/${response.payload.id}`);
+            navigate(`/projects/${response.payload.id}`);
             return;
         }
         if (createExam.rejected.match(response)) {
@@ -69,30 +59,42 @@ const NewProjectPage = () => {
         }
     }
 
-    const handleSubjectSelection = (value: string[]) => {
-        const subjects: string[] = value.map((item) => {
-            return hyphinize(item)
-        })
-        setSubjects(subjects);
-    }
-
     const handleCancel = () => {
         return navigate("/home")
     }
 
-    const handleNewSubject = () => {
-        store.dispatch(addSubject({
-            id: user.data.id,
-            subject_slugs: [hyphinize(newSubject)],
-        }));
-        showNotification({
-            title: 'Successful',
-            message: 'New subject added',
-            color: 'green',
-            icon: <IconCheck />
-        });
-        close();
+    const handleCourseInput = (index: number, course: string) => {
+        const updatedCourseList = [...courseList];
+        updatedCourseList[index] = course;
+        setCourseList(updatedCourseList)
     }
+
+    const handleAddCourse = () => {
+        if (courseList.includes("")) {
+            showNotification({
+                title: 'Validation',
+                message: 'Course title is missing',
+                color: 'red',
+                icon: <IconX />
+            });
+            return;
+        };
+        setCourseList([...courseList, '']);
+    }
+
+    // const handleNewSubject = () => {
+    //     store.dispatch(addSubject({
+    //         id: user.data.id,
+    //         subject_slugs: [hyphinize(newSubject)],
+    //     }));
+    //     showNotification({
+    //         title: 'Successful',
+    //         message: 'New subject added',
+    //         color: 'green',
+    //         icon: <IconCheck />
+    //     });
+    //     close();
+    // }
 
     return (
         <>
@@ -118,8 +120,21 @@ const NewProjectPage = () => {
                                 required={true}
                                 onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
                             />
-                            <Text size={"sm"} >Estimated No. of Student ?</Text>
-                            <Select
+                            {courseList.map((c, idx) => {
+                                return (
+                                    <div key={idx}>
+                                        <Group position={"apart"} >
+                                            <Text size={"sm"} >Add course({idx + 1})</Text>
+                                            {idx === 0 && <UnstyledButton style={{ "fontSize": "13px", "color": "#666", "textDecoration": "underline" }} onClick={handleAddCourse}>[+ Add course]</UnstyledButton>}
+                                        </Group>
+                                        <Input
+                                            required={true}
+                                            placeholder="Enter course title here" radius="md" mb={"md"} size={"md"}
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleCourseInput(idx, event.target.value)} />
+                                    </div>
+                                )
+                            })}
+                            {/* <Select
                                 placeholder="Select range of total student"
                                 mb={"md"}
                                 size={"md"}
@@ -133,12 +148,12 @@ const NewProjectPage = () => {
                                 ]}
                                 value={studentCount}
                                 onChange={(value: any) => setStudentCount(value)}
-                            />
-                            <Group position={"apart"}>
+                            /> */}
+                            {/* <Group position={"apart"}>
                                 <Text size={"sm"}>Select Subject </Text>
                                 <UnstyledButton style={{ "fontSize": "13px", "color": "#666", "textDecoration": "underline" }} onClick={open}>[Add subject]</UnstyledButton>
-                            </Group>
-                            <MultiSelect
+                            </Group> */}
+                            {/* <MultiSelect
                                 placeholder="Subject name"
                                 searchable
                                 mb={"md"}
@@ -146,7 +161,7 @@ const NewProjectPage = () => {
                                 nothingFound="No subject found"
                                 data={subjectData}
                                 onChange={(value: string[]) => handleSubjectSelection(value)}
-                            />
+                            /> */}
 
                         </div>
                         <Group position="right">
@@ -155,14 +170,11 @@ const NewProjectPage = () => {
                         </Group>
                     </form>
                 </div>
-                <ModalView opened={opened} close={close} title="Add Subject">
+                {/* <ModalView opened={opened} close={close} title="Add Subject">
                     <Input placeholder="Enter subject Name here" radius="md" mb={"md"} size={"md"}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSubject(e.target.value)} />
-                    {/* <Group position="right"> */}
                     <Button onClick={handleNewSubject}>Continue <IconChevronRight /></Button>
-                    {/* </Group> */}
-                </ModalView>
-                {/* <Notify title="Subject Added" body="New subject has been added" /> */}
+                </ModalView> */}
             </Container>
             <Footer />
         </>

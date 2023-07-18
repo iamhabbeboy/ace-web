@@ -6,10 +6,9 @@ import googleIcon from "../assets/google.svg"
 import styles from "../styles/Homepage.module.css";
 import { useGoogleLogin } from '@react-oauth/google';
 import { IGoogleOauth } from '../types/Type';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setUser } from '../store/collections/user';
-import { selectUser } from '../store/selectors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     body: {
@@ -47,7 +46,7 @@ const SignInPage = () => {
 
     const handleAuthentication = async (token: IGoogleOauth) => {
         const response = await createGoogleOauthUser(token)
-        const result = await dispatch(setUser(response));
+        const result = dispatch(setUser(response));
         if(!result.payload.id) {
             setError("Error occured while processing user information, please try again later.");
             return;
@@ -64,7 +63,7 @@ const SignInPage = () => {
         onSuccess: tokenResponse => handleAuthentication(tokenResponse),
     });
 
-    const user = useSelector(selectUser)
+    // const user = useSelector(selectUser)
     // useEffect(() => {
     //   if(user.token) {
     //     window.location.href = "/home"
