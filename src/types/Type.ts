@@ -51,9 +51,11 @@ export interface ISubject {
 
 export interface IQuestion {
   content: string;
-  content_html: string;
   answer: string;
   subject: string;
+  images: string[];
+  content_html: string;
+  subject_slug: string;
   options: IOptions[];
 }
 

@@ -50,8 +50,8 @@ const TableLayout = ({ data }: any) => {
             <td>{exam.description}</td>
             <td>
                 {exam.subject_slugs && exam.subject_slugs.length > 0 ?
-                    exam.subject_slugs.map((ex) => {
-                        return <Badge mr={2}>{ex}</Badge>
+                    exam.subject_slugs.map((slug, idx) => {
+                        return <Badge mr={2} key={idx}>{slug}</Badge>
                     })
                     : ""
                 }
