@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux"
 import { fetchExam } from "../../store/thunks/exam"
 import { useCallback, useEffect } from "react"
 import axios, { AxiosError } from "axios"
+import useAxios from "../../hooks/useAxios"
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -35,7 +36,6 @@ const useStyles = createStyles((theme) => ({
         }
     }
 }));
-
 
 const TableLayout = ({ data }: any) => {
     const navigate = useNavigate();
@@ -103,8 +103,6 @@ const NoExam = () => {
     )
 }
 
-
-
 const DashboardHomePage = () => {
     const { classes } = useStyles();
     const dispatch = useDispatch<AppDispatch>();
@@ -112,16 +110,17 @@ const DashboardHomePage = () => {
     const examData = exams.data;
     const hasExamData = examData && examData.length > 0;
     const navigate = useNavigate();
+    const axios = useAxios();
 
     const fetchExamData = useCallback(async () => {
-        const response = await dispatch(fetchExam());
-        if (axios.isAxiosError(response.payload)) {
-            const err: AxiosError = response.payload;
-            if (err.response?.status === 401) {
-                window.location.href = "/signin"
-            }
-        }
-    }, [dispatch]);
+        await dispatch(fetchExam(axios));
+        // if (axios.isAxiosError(response.payload)) {
+        //     const err: AxiosError = response.payload;
+            // if (response?.payload?.status === 401) {
+            //     window.location.href = "/signin"
+            // }
+        // }
+    }, [axios, dispatch]);
 
     useEffect(() => {
         fetchExamData();

@@ -9,6 +9,7 @@ import { IGoogleOauth } from '../types/Type';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/collections/user';
 import { useState } from 'react';
+import useAuth from '../hooks/useAuth';
 
 const useStyles = createStyles((theme) => ({
     body: {
@@ -43,6 +44,7 @@ const SignInPage = () => {
     const navigation = useNavigate()
     const [error, setError] = useState("")
     const dispatch = useDispatch();
+    const { setAuth } = useAuth();
 
     const handleAuthentication = async (token: IGoogleOauth) => {
         const response = await createGoogleOauthUser(token)
@@ -51,10 +53,10 @@ const SignInPage = () => {
             setError("Error occured while processing user information, please try again later.");
             return;
         }
-        localStorage.setItem("oauth_token", result.payload.token);
+        setAuth({ accessToken: result.payload.token });
         if(result.payload.onboarding) {
-            return window.location.href = "/home";
-            // return navigation('/home')
+            // return window.location.href = "/home";
+            return navigation('/home');
         }
         return navigation('/onboarding/account');
     }

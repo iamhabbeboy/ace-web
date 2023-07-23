@@ -49,7 +49,7 @@ export const questionSlice = createSlice({
       builder.addCase(getQuestion.fulfilled, (state: QuestionState, action) => {
         state.isLoading = false;
         state.data = state.data || [];
-        state.data.push(action.payload as IQuestion);
+        state.data.concat(action.payload);
       });
   }
 });

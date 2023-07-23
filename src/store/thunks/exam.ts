@@ -1,19 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IExam } from "../../types/Type";
-import { Axios } from "../../util/axios.lib";
-import axios, { AxiosError } from "axios";
 import { getToken } from "../../util/common";
+import useAxios from "../../hooks/useAxios";
+import axios, { Axios, AxiosError } from "axios";
 
 const token = getToken();
 const headers = {
     Authorization: `Bearer ${token}`
 }
-
 export const createExam = createAsyncThunk(
   "exam/create",
   async (payload: Partial<IExam>, { rejectWithValue }) => {
     try {
-      const { data } = await Axios.post<IExam>("/exams", payload, {headers});
+      const axios = useAxios();
+      const { data } = await axios.post<IExam>("/exams", payload, {headers});
       return data;
     } catch (err) {
       let error = err;
@@ -26,9 +26,12 @@ export const createExam = createAsyncThunk(
   }
 );
 
-export const fetchExam = createAsyncThunk("exam/get", async (_, { rejectWithValue }) => {
+export const fetchExam = createAsyncThunk("exam/get", async (axios: Axios, { rejectWithValue }) => {
   try {
-    const { data } = await Axios.get<IExam>("/exams", { headers });
+    const controller = new AbortController();
+    const { data } = await axios.get<IExam>("/exams", {
+      signal: controller.signal
+  });
     return data;
   } catch (err) {
     return rejectWithValue(err);

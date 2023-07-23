@@ -10,6 +10,7 @@ import { persistor, store } from './store';
 import { Notifications } from '@mantine/notifications';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { PersistGate } from 'redux-persist/integration/react';
+import { AuthContextProvider } from './context/AuthProvider';
 
 const clientID = process.env.REACT_APP_GOOGLE_CLIENT_ID as string;
 const elem = document.getElementById('root') as HTMLElement
@@ -39,9 +40,11 @@ root.render(
     >
       <Notifications />
       <GoogleOAuthProvider clientId={clientID}>
+        <AuthContextProvider>
         <PersistGate loading={null} persistor={persistor}>
           <App />
         </PersistGate>
+        </AuthContextProvider>
       </GoogleOAuthProvider>
     </MantineProvider>
   </Provider>
