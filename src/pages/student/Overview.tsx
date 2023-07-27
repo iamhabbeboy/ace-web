@@ -1,5 +1,5 @@
 import { Alert, Badge, Container, Text, Group, ScrollArea, Table, createStyles, Checkbox, Button, Divider } from "@mantine/core"
-import { IconChevronRight, IconInfoCircle } from "@tabler/icons-react";
+import { IconChevronRight, IconInfoCircle, IconPower } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -75,7 +75,8 @@ const Overview = () => {
                 </ScrollArea>
                 <Divider></Divider>
                 {/* <Group position="right"> */}
-                <Button size="lg" mt="lg" onClick={handleStart}>Start <IconChevronRight /></Button>
+                <Button size="md" mt="smd" color="red">Sign Out <IconPower /></Button> &nbsp; &nbsp;
+                <Button size="md" mt="lg" onClick={handleStart}>Start <IconChevronRight /></Button>
                 {/* </Group> */}
             </div>
         </Container>

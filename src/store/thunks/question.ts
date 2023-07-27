@@ -37,3 +37,18 @@ export const getQuestion = createAsyncThunk(
     }
   }
 );
+
+// export const getQuestion = createAsyncThunk(
+//   "question/get",
+//   async (id: string, { rejectWithValue }) => {
+//     try {
+//       const { data } = await axios.get<IQuestion>(
+//         `/questions/${id}`,
+//         {headers}
+//       );
+//       return data;
+//     } catch (err: any) {
+//       return rejectWithValue(err);
+//     }
+//   }
+// );

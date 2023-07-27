@@ -55,6 +55,9 @@ export const userSlice = createSlice({
     setUser(state: UserState, action: PayloadAction<IUser>) {
       state.data = { ...state.data, ...action.payload };
     },
+    setToken(state: UserState, action: PayloadAction<IUser>) {
+      state.data.token = action.payload.token;
+    },
     addSubject(state: UserState, action: PayloadAction<UpdateUserPayload>) {
       const subjects = state.data.subject_slugs || [];
       let data = action.payload?.subject_slugs && action.payload?.subject_slugs[0];
