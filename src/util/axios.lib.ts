@@ -1,19 +1,8 @@
-import axios, { RawAxiosRequestHeaders } from "axios";
-import { getToken } from "./common";
-
-const request = axios.create({
-  baseURL:
-    `${process.env.REACT_APP_API_URI}/api/v1` || "http://localhost:9200/api/v1",
-  timeout: 1000,
+import axios from "axios";
+const BASE_URL = `${process.env.REACT_APP_API_URI}/api` || "http://localhost:9200/api";
+export default axios.create({
+  baseURL: BASE_URL
 });
-
-const token = getToken();
-// if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-axios.interceptors.request.use((cfg) => {
-  cfg["headers"] = cfg.headers ?? {};
-  (cfg.headers as RawAxiosRequestHeaders)["Authorization"] = `Bearer ${token}`;
-  return cfg;
+export const Axios = axios.create({
+  baseURL: `${BASE_URL}/v1`
 });
-
-export const Axios = request;

@@ -10,7 +10,6 @@ import { IExam } from '../../types/Type';
 import { useDispatch } from "react-redux"
 import { fetchExam } from "../../store/thunks/exam"
 import { useCallback, useEffect } from "react"
-import axios, { AxiosError } from "axios"
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -114,13 +113,13 @@ const DashboardHomePage = () => {
     const navigate = useNavigate();
 
     const fetchExamData = useCallback(async () => {
-        const response = await dispatch(fetchExam());
-        if (axios.isAxiosError(response.payload)) {
-            const err: AxiosError = response.payload;
-            if (err.response?.status === 401) {
-                window.location.href = "/signin"
-            }
-        }
+        await dispatch(fetchExam());
+        // if (axios.isAxiosError(response.payload)) {
+        //     const err: AxiosError = response.payload;
+        //     if (err.response?.status === 401) {
+        //         window.location.href = "/signin"
+        //     }
+        // }
     }, [dispatch]);
 
     useEffect(() => {

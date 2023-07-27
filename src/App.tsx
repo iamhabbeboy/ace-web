@@ -9,7 +9,6 @@ import Login from './pages/student/Login';
 import Overview from './pages/student/Overview';
 import Exam from './pages/student/Exam';
 import SignInPage from './pages/SignIn';
-import ProtectedRoute from './hooks/ProtectedRoute';
 
 function App() {
   return (
@@ -24,14 +23,14 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="/onboarding/account" element={<AccountTypeSelectionPage />} />
             <Route path="/home" element={<DashboardHomePage />} />
             <Route path="/projects/new" element={<NewExamProjectPage />} />
             <Route path="/projects/:examId" element={<ExamOverviewPage />} />
             <Route path="/overview" element={<Overview />} />
             <Route path="/exam" element={<Exam />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </>
