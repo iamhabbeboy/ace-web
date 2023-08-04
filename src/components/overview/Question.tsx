@@ -129,7 +129,7 @@ const AddQuestionTab = ({ subject, exam }: QuestionProps) => {
 			}]
 		};
 
-		store.dispatch(updateExamObj(qtn as IExam));
+		// store.dispatch(updateExamObj(qtn as IExam));
 		showNotification({
 			title: "Success",
 			message: "Question has been added",

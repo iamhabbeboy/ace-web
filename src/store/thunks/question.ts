@@ -1,21 +1,39 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IQuestion } from "../../types/Type";
-import { Axios as axios } from "../../util/axios.lib";
-import { getToken } from "../../util/common";
-
-const token = getToken();
-const headers = {
-    Authorization: `Bearer ${token}`
-}
+import { IPaginatedQuestion, IQuestion } from "../../types/Type";
+import { Axios, Axios as axios } from "../../util/axios.lib";
 
 export const createQuestion = createAsyncThunk(
   "question/create",
   async (payload: Partial<IQuestion>, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post<IQuestion>(
-        `/questions`,
-        payload
-      );
+      const { data } = await axios.post<IQuestion>(`/questions`, payload);
+      return data;
+    } catch (err: any) {
+      return rejectWithValue(err);
+    }
+  }
+);
+// http://localhost:9200/api/v1/courses/questions?next_cursor=64c2ad7c1120738509316f85&subject_slug=english
+export const getQuestionsWithFilter = createAsyncThunk(
+  "question/filter/get",
+  async (
+    payload: { subject?: string; next_cursor?: string; prev_cursor?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      let url = "/courses/questions";
+      if (payload.subject) {
+        url += `?subject_slug=${payload.subject}`;
+      }
+      if (payload.next_cursor) {
+        url += `?next_cursor=${payload.next_cursor}`;
+      }
+      if (payload.prev_cursor) {
+        url += `?prev_cursor=${payload.next_cursor}`;
+      }
+      const { data } = await Axios.get<IPaginatedQuestion>(url, {
+        withCredentials: true,
+      });
       return data;
     } catch (err: any) {
       return rejectWithValue(err);
@@ -27,10 +45,9 @@ export const getQuestion = createAsyncThunk(
   "question/get",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<IQuestion>(
-        `/questions/${id}`,
-        {headers}
-      );
+      const { data } = await Axios.get<IQuestion>(`/questions/${id}`, {
+        withCredentials: true,
+      });
       return data;
     } catch (err: any) {
       return rejectWithValue(err);

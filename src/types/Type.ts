@@ -12,6 +12,8 @@ export interface IUser {
   picture: string;
   email: string;
   token: string;
+  assigned_subjects: string[];
+  subjects: ISubject[],
   onboarding: boolean,
   family_name: string;
   given_name: string;
@@ -39,14 +41,20 @@ export interface IExam {
   created_at: string;
   updated_at: string;
   expired_at: string;
-  subject_slugs: string[];
+  subject_slugs: Subjects[];
   questions: IQuestion[];
 }
 
-export interface ISubject {
-  name: string;
+export interface Subjects {
+  title: string;
   slug: string;
-  description?: string;
+  duration: number;
+}
+
+export interface ISubject {
+  title: string;
+  slug: string;
+  duration: number;
 }
 
 export interface IQuestion {
@@ -57,6 +65,12 @@ export interface IQuestion {
   content_html: string;
   subject_slug: string;
   options: IOptions[];
+}
+
+export interface IPaginatedQuestion {
+  data: IQuestion[];
+  cursor: string;
+  total: number;
 }
 
 export interface IOptions {

@@ -8,6 +8,7 @@ import { store } from '../../store';
 import { useState } from 'react';
 import { hyphinize } from '../../util/string';
 import { showNotification } from "@mantine/notifications";
+import { Subjects } from '../../types/Type';
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -30,33 +31,33 @@ const NewProjectPage = () => {
     // const [opened, { open, close }] = useDisclosure(false);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [courseList, setCourseList] = useState<string[]>([""]);
+    const [courseList, setCourseList] = useState<Subjects[]>([]);
 
     // const user = useSelector((state: RootState) => state.account.user)
 
     const navigate = useNavigate();
     const handleSubmitAction = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const courses = courseList.map((course) => hyphinize(course));
-        const response = await store.dispatch(createExam({
-            name: name,
-            description: description,
-            subject_slugs: courses,
-        }));
+        // const courses = courseList.map((course) => {title: course.title, slug: hyphinize(course.slug), duration: course.duration});
+        // const response = await store.dispatch(createExam({
+        //     name: name,
+        //     description: description,
+        //     subject_slugs: courses,
+        // }));
 
-        if (createExam.fulfilled.match(response)) {
-            navigate(`/projects/${response.payload.id}`);
-            return;
-        }
-        if (createExam.rejected.match(response)) {
-            showNotification({
-                title: 'Error Occured',
-                message: response.payload as string,
-                color: 'red',
-                icon: <IconX />
-            });
-            return;
-        }
+        // if (createExam.fulfilled.match(response)) {
+        //     navigate(`/projects/${response.payload.id}`);
+        //     return;
+        // }
+        // if (createExam.rejected.match(response)) {
+        //     showNotification({
+        //         title: 'Error Occured',
+        //         message: response.payload as string,
+        //         color: 'red',
+        //         icon: <IconX />
+        //     });
+        //     return;
+        // }
     }
 
     const handleCancel = () => {
@@ -65,21 +66,21 @@ const NewProjectPage = () => {
 
     const handleCourseInput = (index: number, course: string) => {
         const updatedCourseList = [...courseList];
-        updatedCourseList[index] = course;
+        // updatedCourseList[index] = course;
         setCourseList(updatedCourseList)
     }
 
     const handleAddCourse = () => {
-        if (courseList.includes("")) {
-            showNotification({
-                title: 'Validation',
-                message: 'Course title is missing',
-                color: 'red',
-                icon: <IconX />
-            });
-            return;
-        };
-        setCourseList([...courseList, '']);
+        // if (courseList.includes("")) {
+        //     showNotification({
+        //         title: 'Validation',
+        //         message: 'Course title is missing',
+        //         color: 'red',
+        //         icon: <IconX />
+        //     });
+        //     return;
+        // };
+        // setCourseList([...courseList, '']);
     }
 
     // const handleNewSubject = () => {

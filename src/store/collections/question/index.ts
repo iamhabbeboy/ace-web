@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IQuestion } from "../../../types/Type";
-import { createQuestion, getQuestion } from "../../thunks/question";
+import { IPaginatedQuestion, IQuestion } from "../../../types/Type";
+import { createQuestion, getQuestion, getQuestionsWithFilter } from "../../thunks/question";
 
 export interface QuestionState {
   data: IQuestion[];
   error?: string;
   isLoading?: boolean;
 }
-
-//   export type UpdateExamPayload = Pick<IExam, "id"> & {
-//     name?: string;
-//     description?: string;
-//     questions?: IQuestion[];
-//     subject_slugs?: string[];
-//   };
+export interface PaginatedQuestionState {
+  data: IPaginatedQuestion;
+  error?: string;
+  isLoading?: boolean;
+}
 
 export const initialState: QuestionState = {
   data: [],
@@ -37,6 +35,19 @@ export const questionSlice = createSlice({
         state.isLoading = false;
         state.data = state.data || [];
         state.data.push(action.payload as IQuestion);
+      });
+      // get student questions
+      builder.addCase(getQuestionsWithFilter.pending, (state: QuestionState) => { 
+        state.isLoading = true;
+      });
+      builder.addCase(getQuestionsWithFilter.rejected, (state: QuestionState, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+      builder.addCase(getQuestionsWithFilter.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // state.data = state.data || [];
+        state.data[0] = action.payload as any;
       });
       // get questions
       builder.addCase(getQuestion.pending, (state: QuestionState) => { 

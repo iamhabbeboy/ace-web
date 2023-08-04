@@ -1,6 +1,11 @@
 import { Alert, Badge, Container, Text, Group, ScrollArea, Table, createStyles, Checkbox, Button, Divider } from "@mantine/core"
 import { IconChevronRight, IconInfoCircle, IconPower } from "@tabler/icons-react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getStudentInfo } from "../../store/thunks/user";
+import { AppDispatch, RootState } from "../../store";
+import { useCallback, useEffect } from "react";
+import { convertToHMS } from "../../util/common";
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -17,41 +22,23 @@ const useStyles = createStyles((theme) => ({
 
 
 const Overview = () => {
+    // store.dispatch(getStudentInfo());
+    const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector((state: RootState) => state.account.user.data)
+    const fetchUser = useCallback(async () => {
+        await dispatch(getStudentInfo());
+    }, [dispatch]);
+
+    useEffect(() => {
+        fetchUser();
+    }, []);
+
     const { classes } = useStyles();
-    const data = [
-        {
-            name: "English",
-            role: "Manager"
-        }
-    ];
-    // const user = useSelector((state: RootState) => state.account.user)
     const navigation = useNavigate();
     const handleStart = () => {
         return navigation("/exam")
     }
-    const rows = data.map((item) => (
-        <tr key={item.name}>
-            <td>
-                <Checkbox />
-            </td>
-            <td>
-                <Group spacing="sm">
-                    <div>
-                        <Text fz="sm" fw={500}>
-                            {item.name}
-                        </Text>
-                    </div>
-                </Group>
-            </td>
-            <td>30mins</td>
-            <td>05mins 30secs</td>
-            <td>
-                <Badge color="primary">
-                    Pending
-                </Badge>
-            </td>
-        </tr>
-    ));
+
     return (
         <Container>
             <br /><br /><br />
@@ -60,18 +47,44 @@ const Overview = () => {
                 <Alert><IconInfoCircle size={"1rem"} /> <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam praesentium, quisquam quos unde tempora itaque delectus doloribus ad, impedit vero ratione, rem quidem numquam adipisci accusantium culpa! Obcaecati, excepturi vitae.</p></Alert>
                 <h3>Course(s)</h3>
                 <ScrollArea>
-                    <Table miw={800} verticalSpacing="sm">
-                        <thead>
-                            <tr>
-                                <th>S/N</th>
-                                <th>Title</th>
-                                <th>Duration</th>
-                                <th>Time spent</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
+                    {user && user?.assigned_subjects &&
+                        <Table miw={800} verticalSpacing="sm">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Title</th>
+                                    <th>Duration</th>
+                                    <th>Time spent</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {user.subjects.map((item, idx) => (
+                                    <tr key={idx}>
+                                        <td>
+                                            <Checkbox />
+                                        </td>
+                                        <td>
+                                            <Group spacing="sm">
+                                                <div>
+                                                    <Text fz="sm" fw={500}>
+                                                        {item.title}
+                                                    </Text>
+                                                </div>
+                                            </Group>
+                                        </td>
+                                        <td>{convertToHMS(item.duration)}</td>
+                                        <td>0</td>
+                                        <td>
+                                            <Badge color="primary">
+                                                Pending
+                                            </Badge>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    }
                 </ScrollArea>
                 <Divider></Divider>
                 {/* <Group position="right"> */}

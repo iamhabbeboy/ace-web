@@ -40,11 +40,12 @@ const GroupSubject = ({ exam }: GroupSubjectProps) => {
             {exam.subject_slugs.map((subject, index) => {
                 return (
                     <Accordion.Item value="customization" key={index}>
-                        <Accordion.Control><b style={{ textTransform: 'uppercase', fontSize: '12px' }}>{subject}
-                            ({questions.map((question) => question.subject_slug === subject).length})</b>
+                        <Accordion.Control><b style={{ textTransform: 'uppercase', fontSize: '12px' }}>{subject?.title}
+                            ({questions && questions.map((question) => question.subject_slug === subject.slug).length})
+                            </b>
                         </Accordion.Control>
                         <Accordion.Panel>
-                            {questions?.length > 0 ?
+                            {questions?.length > 0 ? 
                                 <ScrollArea>
                                     <Table verticalSpacing="sm">
                                         <thead>
@@ -56,9 +57,7 @@ const GroupSubject = ({ exam }: GroupSubjectProps) => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {questions.map((question: IQuestion, idx) =>
-                                                question.subject_slug === subject && <TableRow question={question} idx={idx} key={idx} />
-                                            )}
+                                            {questions.map((question: IQuestion, idx) =>  question.subject_slug !== subject.slug ? <TableRow question={question} idx={idx} key={idx} /> : null)}
                                         </tbody>
                                     </Table>
                                 </ScrollArea>

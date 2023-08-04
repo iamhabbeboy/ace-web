@@ -27,6 +27,20 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const getStudentInfo = createAsyncThunk(
+  "user/student/get",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await Axios.get<IUser>("/courses/", {
+        withCredentials: true
+      });
+      return data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const getUser = createAsyncThunk<
   UserState,
   { id: string },

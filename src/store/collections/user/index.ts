@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { createUser, updateUser } from "../../thunks/user";
+import { createUser, getStudentInfo, updateUser } from "../../thunks/user";
 import { ICompany, IUser } from "../../../types/Type";
 import { hyphinize } from "../../../util/string";
 
@@ -24,6 +24,7 @@ export const initialState: UserState = {
     created_at: new Date().toUTCString(),
     updated_at: new Date().toUTCString(),
     name: "",
+    assigned_subjects: [],
     onboarding: false,
     picture:
       "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
@@ -38,6 +39,11 @@ export const initialState: UserState = {
       },
     ],
     subject_slugs: ["english"],
+    subjects: [{
+      title: "",
+      duration: 0,
+      slug: ""
+    }],
     username: "",
     password: "",
   },
@@ -82,6 +88,23 @@ export const userSlice = createSlice({
         state.data = action.payload;
       }
     );
+    // student portal
+    builder.addCase(
+      getStudentInfo.fulfilled,
+      (state: UserState, action: PayloadAction<IUser>) => {
+        state.isLoading = false;
+        state.data = action.payload;
+      }
+    );
+    builder.addCase(getStudentInfo.pending, (state: UserState) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getStudentInfo.rejected, (state: UserState, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    });
+
+
     // Update fields
     builder.addCase(updateUser.pending, (state: UserState) => {
       state.isLoading = true;
