@@ -17,7 +17,7 @@ export const createQuestion = createAsyncThunk(
 export const getQuestionsWithFilter = createAsyncThunk(
   "question/filter/get",
   async (
-    payload: { subject?: string; next_cursor?: string; prev_cursor?: string },
+    payload: { subject?: string; page?: number; },
     { rejectWithValue }
   ) => {
     try {
@@ -25,11 +25,8 @@ export const getQuestionsWithFilter = createAsyncThunk(
       if (payload.subject) {
         url += `?subject_slug=${payload.subject}`;
       }
-      if (payload.next_cursor) {
-        url += `?next_cursor=${payload.next_cursor}`;
-      }
-      if (payload.prev_cursor) {
-        url += `?prev_cursor=${payload.next_cursor}`;
+      if (payload.page) {
+        url += `&page=${payload.page}`;
       }
       const { data } = await Axios.get<IPaginatedQuestion>(url, {
         withCredentials: true,

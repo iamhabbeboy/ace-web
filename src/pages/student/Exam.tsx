@@ -23,47 +23,38 @@ const useStyles = createStyles((theme) => ({
 
 const Exam = () => {
     const { classes } = useStyles();
-    const [next, setNext] = useState("");
-    const [prev, setPrev] = useState("");
     const [subject, setSubject] = useState("english");
     const [currentPage, setCurrentPage] = useState(1)
+    const [option, setOption] = useState("");
 
     const dispatch = useDispatch<AppDispatch>();
-    const questions: QuestionState = useSelector((state: RootState) => state.account.question);
-    // const filter = questions.data.filter((data) => data);
-    const question = questions.data[0] as any;
-    const data = question["data"][0] as IQuestion
-    const total = question["total"];
-    console.log(data);
     const fetchQuestionData = useCallback(async () => {
         const payload = {
             subject: subject,
-            next_cursor: "",
-            prev_cursor: "",
+            page: 1,
         }
-        if (next) {
-            payload.next_cursor = next
-        }
-        if (prev) {
-            payload.prev_cursor = prev
-        }
+        payload.page = currentPage
         await dispatch(getQuestionsWithFilter(payload));
-    }, [dispatch, next, prev, subject]);
+    }, [currentPage, dispatch, subject]);
 
     useEffect(() => {
         fetchQuestionData();
-    }, [fetchQuestionData])
+    }, [fetchQuestionData, option])
 
     const handlePagination = (page: number) => {
         setCurrentPage(page);
     }
+
+    const questions: QuestionState = useSelector((state: RootState) => state.account.question);
+    const question = questions["data"][0] as any;
+    const data = question["data"][0] as IQuestion
+    const total = question["total"] as number;
 
     const handleNextPage = () => {
         if (currentPage >= total) {
             setCurrentPage(total);
         } else {
             setCurrentPage(currentPage + 1)
-            setNext("234234");
         }
     }
 
@@ -72,7 +63,6 @@ const Exam = () => {
             setCurrentPage(1);
         } else {
             setCurrentPage(currentPage - 1)
-            setPrev("234234");
         }
     }
     return (
@@ -103,8 +93,8 @@ const Exam = () => {
                             </Grid.Col>
                             <Grid.Col span={4} >
                                 <div style={{ overflowY: "scroll", height: "500px", borderLeft: "1px solid #ccc" }}>
-                                    {data && data.options.map((option, idx) => {
-                                        return (<ExamOption label={option.label} content={option.content} key={idx} />)
+                                    {data && data.options.map((opt, idx) => {
+                                        return (<ExamOption label={opt.label} content={opt.content} setOptionHandler={setOption} key={idx} status={opt.label === option } />)
                                     })}
                                 </div>
                             </Grid.Col>
@@ -119,7 +109,7 @@ const Exam = () => {
                                 {data && (() => {
                                     const items = [];
                                     for (let i = 1; i <= total; i++) {
-                                        items.push(<Button mt={5} ml={5} color="indigo" onClick={() => handlePagination(i)}>{i}</Button>);
+                                        items.push(<Button mt={5} ml={5} key={i} color={i === currentPage ? "orange" : "indigo"} onClick={() => handlePagination(i)}>{i}</Button>);
                                     }
                                     return items;
                                 })()}
