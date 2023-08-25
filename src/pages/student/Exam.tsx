@@ -1,12 +1,16 @@
-import { Button, Container, Divider, Grid, Group, Tabs, createStyles } from "@mantine/core"
+import { Button, Container, Divider, Flex, Grid, Group, Tabs, createStyles } from "@mantine/core"
 import ExamOption from "../../components/student/ExamOption";
-import { IconCircleCheck } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleX, IconMessageCircleCancel } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { getQuestionsWithFilter } from "../../store/thunks/question";
-import { AppDispatch, RootState } from "../../store";
+import { AppDispatch, RootState, persistor } from "../../store";
 import { QuestionState } from "../../store/collections/question";
 import { IQuestion } from "../../types/Type";
+import { CountdownTimer } from '../../components/CountdownTimer';
+import { logoutUser } from "../../store/collections/user";
+import { Modal } from '@mantine/core';
+
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -21,11 +25,34 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
+const SignOutModal = ({status, setStatus}: {status: boolean, setStatus: any}) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const handleSignOut = async () => {
+        await dispatch(logoutUser);
+        persistor.purge().then(() => {
+            sessionStorage.clear();
+        });
+        window.location.href = "/login"
+    }
+    return (
+        <Modal centered size="sm" opened={status} onClose={function (): void {
+           setStatus(false);
+        } }>
+            <div style={{textAlign: "center"}}>
+                <h2>Are you sure?</h2>
+                <Button mb={5} size="xs" mr={3} color={"green"} onClick={handleSignOut}>Confirmed &nbsp;<IconCircleCheck /></Button>
+                <Button mb={5} size="xs"  ml={3}  color={"red"} onClick={() => setStatus(false)}>Cancel &nbsp;<IconCircleX /></Button>
+            </div>
+        </Modal>
+    )
+}
+
 const Exam = () => {
     const { classes } = useStyles();
     const [subject, setSubject] = useState("english");
     const [currentPage, setCurrentPage] = useState(1)
     const [option, setOption] = useState("");
+    const [status, setStatus] = useState(false);
 
     const dispatch = useDispatch<AppDispatch>();
     const fetchQuestionData = useCallback(async () => {
@@ -46,16 +73,22 @@ const Exam = () => {
     }
 
     const questions: QuestionState = useSelector((state: RootState) => state.account.question);
-    const question = questions["data"][0] as any;
-    const data = question["data"][0] as IQuestion
-    const total = question["total"] as number;
-
+    let total: number, question, data: IQuestion;
+    console.log(questions)
+    if(questions && questions["data"]) {
+    question = questions["data"][0] as any;
+    // data = question["data"][0]
+    total = 10//question["total"] as number;
+    }
     const handleNextPage = () => {
         if (currentPage >= total) {
             setCurrentPage(total);
         } else {
             setCurrentPage(currentPage + 1)
         }
+    }
+    const handlePreSignOut = async () => {
+        setStatus(true);
     }
 
     const handlePreviousPage = () => {
@@ -67,14 +100,15 @@ const Exam = () => {
     }
     return (
         <Container size={"xl"}>
+            <SignOutModal status={status} setStatus={setStatus}/>
             <Group position="apart">
                 <div>
                     <h1 style={{ color: "#666" }}>Ace Test</h1>
-                    <Button mb={5} size="xs" color={"red"}>Submit &nbsp;<IconCircleCheck /></Button>
+                    <Button mb={5} size="xs" color={"red"} onClick={handlePreSignOut}>Submit &nbsp;<IconCircleCheck /></Button>
                 </div>
                 <div style={{ textAlign: "right" }}>
                     <p>Time Remaining</p>
-                    <h2>1:00:00</h2>
+                    <CountdownTimer hours={1} minutes={30} seconds={0} />
                 </div>
             </Group>
             <div className={classes.section}>
@@ -88,14 +122,14 @@ const Exam = () => {
                             <Grid.Col span={8}>
                                 <div style={{ overflowY: "scroll", height: "500px", color: "#666" }}>
                                     <h3>({currentPage})</h3>
-                                    <h1>{data.content}</h1>
+                                    {/* <h1>{data && data.content}</h1> */}
                                 </div>
                             </Grid.Col>
                             <Grid.Col span={4} >
                                 <div style={{ overflowY: "scroll", height: "500px", borderLeft: "1px solid #ccc" }}>
-                                    {data && data.options.map((opt, idx) => {
-                                        return (<ExamOption label={opt.label} content={opt.content} setOptionHandler={setOption} key={idx} status={opt.label === option } />)
-                                    })}
+                                    {/* {data && data.options.map((opt, idx) => {
+                                        return (<ExamOption label={opt.label} content={opt.content} setOptionHandler={setOption} key={idx} status={opt.label === option} />)
+                                    })} */}
                                 </div>
                             </Grid.Col>
                         </Grid>
@@ -106,13 +140,13 @@ const Exam = () => {
                                 <Button mt={5} ml={5} color="indigo" onClick={handleNextPage}>Next </Button>
                             </div>
                             <div>
-                                {data && (() => {
+                                {/* {data && (() => {
                                     const items = [];
                                     for (let i = 1; i <= total; i++) {
                                         items.push(<Button mt={5} ml={5} key={i} color={i === currentPage ? "orange" : "indigo"} onClick={() => handlePagination(i)}>{i}</Button>);
                                     }
                                     return items;
-                                })()}
+                                })()} */}
                             </div>
                         </Group>
                     </Tabs.Panel>

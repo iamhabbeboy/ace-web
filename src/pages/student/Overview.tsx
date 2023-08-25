@@ -3,9 +3,10 @@ import { IconChevronRight, IconInfoCircle, IconPower } from "@tabler/icons-react
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getStudentInfo } from "../../store/thunks/user";
-import { AppDispatch, RootState } from "../../store";
+import { AppDispatch, RootState, persistor } from "../../store";
 import { useCallback, useEffect } from "react";
 import { convertToHMS } from "../../util/common";
+import { logoutUser } from "../../store/collections/user";
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -31,12 +32,20 @@ const Overview = () => {
 
     useEffect(() => {
         fetchUser();
-    }, []);
+    }, [fetchUser]);
 
     const { classes } = useStyles();
     const navigation = useNavigate();
     const handleStart = () => {
         return navigation("/exam")
+    }
+
+    const handleSignOut = async () => {
+        await dispatch(logoutUser);
+        persistor.purge().then(() => {
+            sessionStorage.clear();
+        });
+        window.location.href =  "/login"
     }
 
     return (
@@ -88,7 +97,7 @@ const Overview = () => {
                 </ScrollArea>
                 <Divider></Divider>
                 {/* <Group position="right"> */}
-                <Button size="md" mt="smd" color="red">Sign Out <IconPower /></Button> &nbsp; &nbsp;
+                <Button size="md" mt="smd" color="red" onClick={handleSignOut}>Sign Out <IconPower /></Button> &nbsp; &nbsp;
                 <Button size="md" mt="lg" onClick={handleStart}>Start <IconChevronRight /></Button>
                 {/* </Group> */}
             </div>

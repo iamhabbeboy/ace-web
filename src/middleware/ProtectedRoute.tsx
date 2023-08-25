@@ -7,8 +7,6 @@ const ProtectedRoute = ({ children }: any) => {
     const refresh = useRefreshToken();
     const user = useSelector((_state: RootState) => _state.account.user)
     const token = user.data.token;
-    // const location = useLocation();
-    // useEffect(() => {
     const requestIntercept = Axios.interceptors.request.use(config => {
         if (!config.headers["Authorization"]) {
             config.headers["Authorization"] = `Bearer ${token}`;

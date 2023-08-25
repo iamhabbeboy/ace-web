@@ -62,6 +62,7 @@ export const userSlice = createSlice({
       state.data = { ...state.data, ...action.payload };
     },
     setToken(state: UserState, action: PayloadAction<IUser>) {
+      console.log("Hello world");
       state.data.token = action.payload.token;
     },
     addSubject(state: UserState, action: PayloadAction<UpdateUserPayload>) {
@@ -93,7 +94,8 @@ export const userSlice = createSlice({
       getStudentInfo.fulfilled,
       (state: UserState, action: PayloadAction<IUser>) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.data.subjects = action.payload.subjects
+        state.data.assigned_subjects = action.payload.assigned_subjects
       }
     );
     builder.addCase(getStudentInfo.pending, (state: UserState) => {
