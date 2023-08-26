@@ -1,12 +1,12 @@
-import { Button, Container, Divider, Flex, Grid, Group, Tabs, createStyles } from "@mantine/core"
+import { Button, Container, Divider, Grid, Group, Tabs, createStyles } from "@mantine/core"
 import ExamOption from "../../components/student/ExamOption";
-import { IconCircleCheck, IconCircleX, IconMessageCircleCancel } from "@tabler/icons-react";
+import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getQuestionsWithFilter } from "../../store/thunks/question";
 import { AppDispatch, RootState, persistor } from "../../store";
-import { QuestionState } from "../../store/collections/question";
-import { IQuestion } from "../../types/Type";
+import { PaginatedQuestionState } from "../../store/collections/question";
+import { IQuestion, ISubject } from "../../types/Type";
 import { CountdownTimer } from '../../components/CountdownTimer';
 import { logoutUser } from "../../store/collections/user";
 import { Modal } from '@mantine/core';
@@ -25,7 +25,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const SignOutModal = ({status, setStatus}: {status: boolean, setStatus: any}) => {
+const SignOutModal = ({ status, setStatus }: { status: boolean, setStatus: any }) => {
     const dispatch = useDispatch<AppDispatch>();
     const handleSignOut = async () => {
         await dispatch(logoutUser);
@@ -36,12 +36,12 @@ const SignOutModal = ({status, setStatus}: {status: boolean, setStatus: any}) =>
     }
     return (
         <Modal centered size="sm" opened={status} onClose={function (): void {
-           setStatus(false);
-        } }>
-            <div style={{textAlign: "center"}}>
+            setStatus(false);
+        }}>
+            <div style={{ textAlign: "center" }}>
                 <h2>Are you sure?</h2>
                 <Button mb={5} size="xs" mr={3} color={"green"} onClick={handleSignOut}>Confirmed &nbsp;<IconCircleCheck /></Button>
-                <Button mb={5} size="xs"  ml={3}  color={"red"} onClick={() => setStatus(false)}>Cancel &nbsp;<IconCircleX /></Button>
+                <Button mb={5} size="xs" ml={3} color={"red"} onClick={() => setStatus(false)}>Cancel &nbsp;<IconCircleX /></Button>
             </div>
         </Modal>
     )
@@ -49,12 +49,14 @@ const SignOutModal = ({status, setStatus}: {status: boolean, setStatus: any}) =>
 
 const Exam = () => {
     const { classes } = useStyles();
-    const [subject, setSubject] = useState("english");
+    const [subject, setSubject] = useState("");
     const [currentPage, setCurrentPage] = useState(1)
     const [option, setOption] = useState("");
     const [status, setStatus] = useState(false);
 
     const dispatch = useDispatch<AppDispatch>();
+    const user = useSelector((state: RootState) => state.account.user.data)
+    const exam = useSelector((state: RootState) => state.account.question) as unknown as PaginatedQuestionState;
     const fetchQuestionData = useCallback(async () => {
         const payload = {
             subject: subject,
@@ -66,19 +68,27 @@ const Exam = () => {
 
     useEffect(() => {
         fetchQuestionData();
-    }, [fetchQuestionData, option])
+        setSubject(user.subjects[0].slug)
+    }, [fetchQuestionData, option, user.subjects])
 
     const handlePagination = (page: number) => {
         setCurrentPage(page);
     }
 
-    const questions: QuestionState = useSelector((state: RootState) => state.account.question);
-    let total: number, question, data: IQuestion;
-    console.log(questions)
-    if(questions && questions["data"]) {
-    question = questions["data"][0] as any;
-    // data = question["data"][0]
-    total = 10//question["total"] as number;
+    let total: number = 0, data: IQuestion = {
+        content: "",
+        answer: "",
+        subject: "",
+        images: [],
+        content_html: "",
+        subject_slug: "",
+        options: []
+    };
+
+    if (exam.data) {
+        const payload = exam.data
+        data = payload.data
+        total = payload.total
     }
     const handleNextPage = () => {
         if (currentPage >= total) {
@@ -98,38 +108,50 @@ const Exam = () => {
             setCurrentPage(currentPage - 1)
         }
     }
+
+    const handleSubjectChange = (subj: ISubject) => {
+        // if(subject === subj.slug) {
+        //     return;
+        // }
+        setSubject(subj.slug);
+        // console.log(subject)
+        // console.log(subj.slug);
+        console.log(subj)
+    }
     return (
         <Container size={"xl"}>
-            <SignOutModal status={status} setStatus={setStatus}/>
+            <SignOutModal status={status} setStatus={setStatus} />
             <Group position="apart">
                 <div>
                     <h1 style={{ color: "#666" }}>Ace Test</h1>
                     <Button mb={5} size="xs" color={"red"} onClick={handlePreSignOut}>Submit &nbsp;<IconCircleCheck /></Button>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                    <p>Time Remaining</p>
+                    <p>Time Remaining {subject}</p>
                     <CountdownTimer hours={1} minutes={30} seconds={0} />
                 </div>
             </Group>
             <div className={classes.section}>
-                <Tabs defaultValue="gallery">
+                <Tabs defaultValue={"english"}>
                     <Tabs.List>
-                        <Tabs.Tab value="gallery">English</Tabs.Tab>
+                        {user && user.subjects.map((value: ISubject, idx: number) => {
+                            console.log(value)
+                            return <Tabs.Tab value={value.slug} key={idx} onClick={() => handleSubjectChange(value)}>{value.title}</Tabs.Tab>
+                        })}
                     </Tabs.List>
-
-                    <Tabs.Panel value="gallery" pt="xs">
+                    <Tabs.Panel value={"english"} pt="xs">
                         <Grid>
                             <Grid.Col span={8}>
                                 <div style={{ overflowY: "scroll", height: "500px", color: "#666" }}>
                                     <h3>({currentPage})</h3>
-                                    {/* <h1>{data && data.content}</h1> */}
+                                    <h1>{data && data.content}</h1>
                                 </div>
                             </Grid.Col>
                             <Grid.Col span={4} >
                                 <div style={{ overflowY: "scroll", height: "500px", borderLeft: "1px solid #ccc" }}>
-                                    {/* {data && data.options.map((opt, idx) => {
+                                    {data && data.options.map((opt, idx) => {
                                         return (<ExamOption label={opt.label} content={opt.content} setOptionHandler={setOption} key={idx} status={opt.label === option} />)
-                                    })} */}
+                                    })}
                                 </div>
                             </Grid.Col>
                         </Grid>
@@ -140,13 +162,13 @@ const Exam = () => {
                                 <Button mt={5} ml={5} color="indigo" onClick={handleNextPage}>Next </Button>
                             </div>
                             <div>
-                                {/* {data && (() => {
+                                {data && (() => {
                                     const items = [];
                                     for (let i = 1; i <= total; i++) {
                                         items.push(<Button mt={5} ml={5} key={i} color={i === currentPage ? "orange" : "indigo"} onClick={() => handlePagination(i)}>{i}</Button>);
                                     }
                                     return items;
-                                })()} */}
+                                })()}
                             </div>
                         </Group>
                     </Tabs.Panel>

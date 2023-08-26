@@ -47,7 +47,7 @@ export const questionSlice = createSlice({
       builder.addCase(getQuestionsWithFilter.fulfilled, (state, action) => {
         state.isLoading = false;
         // state.data = state.data || [];
-        state.data[0] = action.payload as any;
+        state.data = action.payload as any;
       });
       // get questions
       builder.addCase(getQuestion.pending, (state: QuestionState) => { 

@@ -68,7 +68,7 @@ export interface IQuestion {
 }
 
 export interface IPaginatedQuestion {
-  data: IQuestion[];
+  data: IQuestion;
   cursor: string;
   total: number;
 }
