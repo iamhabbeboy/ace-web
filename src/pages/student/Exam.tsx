@@ -10,6 +10,8 @@ import { IQuestion, ISubject } from "../../types/Type";
 import { CountdownTimer } from '../../components/CountdownTimer';
 import { logoutUser } from "../../store/collections/user";
 import { Modal } from '@mantine/core';
+import { createOrUpdateAnswer } from "../../store/thunks/answer";
+import { convertTimeToTimestamp } from "../../util/common";
 
 
 const useStyles = createStyles((theme) => ({
@@ -28,7 +30,7 @@ const useStyles = createStyles((theme) => ({
 const SignOutModal = ({ status, setStatus }: { status: boolean, setStatus: any }) => {
     const dispatch = useDispatch<AppDispatch>();
     const handleSignOut = async () => {
-        await dispatch(logoutUser);
+        dispatch(logoutUser);
         persistor.purge().then(() => {
             sessionStorage.clear();
         });
@@ -53,7 +55,8 @@ const Exam = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [option, setOption] = useState("");
     const [status, setStatus] = useState(false);
-
+    const [countdown, setCountdown] = useState(convertTimeToTimestamp());
+    console.log(countdown)
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.account.user.data)
     const exam = useSelector((state: RootState) => state.account.question) as unknown as PaginatedQuestionState;
@@ -66,23 +69,24 @@ const Exam = () => {
         await dispatch(getQuestionsWithFilter(payload));
     }, [currentPage, dispatch, subject]);
 
-    useEffect(() => {
-        fetchQuestionData();
-        setSubject(user.subjects[0].slug)
-    }, [fetchQuestionData, option, user.subjects])
+    const setCountdownHandler = (value: number) => {
+        setCountdown(value);
+    }
 
     const handlePagination = (page: number) => {
         setCurrentPage(page);
     }
 
     let total: number = 0, data: IQuestion = {
+        id: "",
         content: "",
         answer: "",
         subject: "",
         images: [],
         content_html: "",
         subject_slug: "",
-        options: []
+        options: [],
+        exam_id: ""
     };
 
     if (exam.data) {
@@ -118,6 +122,26 @@ const Exam = () => {
         // console.log(subj.slug);
         console.log(subj)
     }
+
+    const updateAnswer = useCallback(async () => {
+        const answer = {
+            qId: data.id,
+            userId: user.id,
+            examId: data.exam_id,
+            opt: option,
+            timestamp: 0,
+        };
+        await dispatch(createOrUpdateAnswer(answer));
+    }, [data.exam_id, data.id, dispatch, option, user.id]);
+
+    useEffect(() => {
+        fetchQuestionData();
+        setSubject(user.subjects[0].slug)
+        if(option) {
+            updateAnswer();
+        }
+    }, [fetchQuestionData, option, updateAnswer, user.subjects])
+
     return (
         <Container size={"xl"}>
             <SignOutModal status={status} setStatus={setStatus} />
@@ -128,14 +152,13 @@ const Exam = () => {
                 </div>
                 <div style={{ textAlign: "right" }}>
                     <p>Time Remaining {subject}</p>
-                    <CountdownTimer hours={1} minutes={30} seconds={0} />
+                    <CountdownTimer timestamp={countdown} setCountdown={setCountdownHandler} />
                 </div>
             </Group>
             <div className={classes.section}>
                 <Tabs defaultValue={"english"}>
                     <Tabs.List>
                         {user && user.subjects.map((value: ISubject, idx: number) => {
-                            console.log(value)
                             return <Tabs.Tab value={value.slug} key={idx} onClick={() => handleSubjectChange(value)}>{value.title}</Tabs.Tab>
                         })}
                     </Tabs.List>

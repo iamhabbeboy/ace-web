@@ -58,6 +58,8 @@ export interface ISubject {
 }
 
 export interface IQuestion {
+  id: string;
+  exam_id: string
   content: string;
   answer: string;
   subject: string;
@@ -86,4 +88,13 @@ export interface UserToken {
   scope: string;
   authuser: string;
   prompt: string;
+}
+
+
+export interface IAnswer {
+  qId: string;
+  userId: string;
+  examId: string;
+  opt: string;
+  timestamp: number;
 }

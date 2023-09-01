@@ -45,7 +45,7 @@ const Overview = () => {
         persistor.purge().then(() => {
             sessionStorage.clear();
         });
-        window.location.href =  "/login"
+        window.location.href = "/login"
     }
 
     return (
@@ -63,34 +63,38 @@ const Overview = () => {
                                     <th>S/N</th>
                                     <th>Title</th>
                                     <th>Duration</th>
+                                    <th>Questions</th>
                                     <th>Time spent</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {user.subjects.map((item, idx) => (
-                                    <tr key={idx}>
-                                        <td>
-                                            <Checkbox />
-                                        </td>
-                                        <td>
-                                            <Group spacing="sm">
-                                                <div>
-                                                    <Text fz="sm" fw={500}>
-                                                        {item.title}
-                                                    </Text>
-                                                </div>
-                                            </Group>
-                                        </td>
-                                        <td>{convertToHMS(item.duration)}</td>
-                                        <td>0</td>
-                                        <td>
-                                            <Badge color="primary">
-                                                Pending
-                                            </Badge>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {user.subjects.map((item, idx) => {
+                                    const duration = convertToHMS(item.duration)
+                                    return (
+                                        <tr key={idx}>
+                                            <td>
+                                                <Checkbox />
+                                            </td>
+                                            <td>
+                                                <Group spacing="sm">
+                                                    <div>
+                                                        <Text fz="sm" fw={500}>
+                                                            {item.title}
+                                                        </Text>
+                                                    </div>
+                                                </Group>
+                                            </td>
+                                            <td>{`${duration.hours}h, ${duration.minutes}m and ${duration.seconds}s`}</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>
+                                                <Badge color="primary">
+                                                    Pending
+                                                </Badge>
+                                            </td>
+                                        </tr>
+                                )})}
                             </tbody>
                         </Table>
                     }
