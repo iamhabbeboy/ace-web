@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { convertTimestampToHumanReadable } from '../util/common';
+import { convertTimeToTimestamp, convertTimestampToHumanReadable } from '../util/common';
 
 export function CountdownTimer({ timestamp, setCountdown }: { timestamp: number, setCountdown: (value: number) => void }) {
-  const { hours, minutes, seconds  } = convertTimestampToHumanReadable(timestamp);
-  console.log(hours)
+  const timer = convertTimestampToHumanReadable(timestamp);
+  const { hours, minutes, seconds  } = timer;
   const [remainingTime, setRemainingTime] = useState({ hours, minutes, seconds });
+  // setCountdown(convertTimeToTimestamp(timer));
 
   useEffect(() => {
     const interval = setInterval(() => {

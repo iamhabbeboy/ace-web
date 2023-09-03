@@ -31,7 +31,6 @@ export const getQuestionsWithFilter = createAsyncThunk(
       const { data } = await Axios.get<IPaginatedQuestion>(url, {
         withCredentials: true,
       });
-      console.log(data);
       return data;
     } catch (err: any) {
       return rejectWithValue(err);

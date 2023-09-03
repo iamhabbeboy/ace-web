@@ -22,21 +22,55 @@ export const convertToHMS = (seconds: number) => {
 };
 
 export const convertTimestampToHumanReadable = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  // console.log(date.toLocaleDateString())
-  return {
-    hours: date.getHours(),
-    minutes: date.getMinutes(),
-    seconds: date.getSeconds()
-  };
-}
+  const key = "countdown-acetesttop-1";
+  let timestmp = 0;
+  if (sessionStorage.getItem(key) !== null) {
+    const time = sessionStorage.getItem(key);
+    timestmp = Number(time);
+    // console.log(timeDifference, "from storage")
+  } else {
+    timestmp = timestamp
+    sessionStorage.setItem(key, String(timestamp));
+  }
 
-export const convertTimeToTimestamp = () => {
-  const hours = 1;
-  const minutes = 30;
+  const currentTime = new Date() as any;
+  const endTime = new Date(timestmp) as any;
+  const timeDifference = endTime - currentTime;
+
+  if (timeDifference <= 0) {
+    return {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
+
+  const hours = Math.floor(timeDifference / (60 * 60 * 1000));
+  const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+  return {
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds,
+  };
+};
+
+export const convertTimeToTimestamp = (data: {
+  hours: number;
+  minutes: number;
+}) => {
+  const hours = data.hours;
+  const minutes = data.minutes;
   const currentTimestamp = Date.now();
   const durationInMilliseconds = (hours * 60 + minutes) * 60 * 1000;
   const resultingTimestamp = currentTimestamp + durationInMilliseconds;
 
   return resultingTimestamp;
 };
+
+export function jsonToQueryString(json: any) {
+  return Object.keys(json)
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(json[key])}`)
+    .join('&');
+}

@@ -2,13 +2,13 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IAnswer } from "../../types/Type";
 import { Axios } from "../../util/axios.lib";
 import axios, { AxiosError } from "axios";
+import { jsonToQueryString } from '../../util/common';
 
 export const createOrUpdateAnswer = createAsyncThunk("answer/create",
   async (payload: Partial<IAnswer>, { rejectWithValue }) => {
     try {
-        console.log(payload)
-        console.log("here---")
-      const { data } = await Axios.get<IAnswer>("/answers");
+      const query = jsonToQueryString(payload);
+      const { data } = await Axios.get<IAnswer>(`/answers?${query}`);
       return data;
     } catch (err) {
       let error = err;

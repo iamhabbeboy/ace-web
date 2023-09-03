@@ -1,0 +1,12 @@
+.Loader {
+    /* margin: auto;
+    width: 300px;
+    background: orange; */
+    display: block;
+  margin: 0 auto;
+}
+
+.Center {
+    align-items: center;
+    display: flex;
+}

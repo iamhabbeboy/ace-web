@@ -2,9 +2,9 @@ import { Button, Container, Divider, Grid, Group, Tabs, createStyles } from "@ma
 import ExamOption from "../../components/student/ExamOption";
 import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getQuestionsWithFilter } from "../../store/thunks/question";
-import { AppDispatch, RootState, persistor } from "../../store";
+import { AppDispatch, RootState, persistor, store } from "../../store";
 import { PaginatedQuestionState } from "../../store/collections/question";
 import { IQuestion, ISubject } from "../../types/Type";
 import { CountdownTimer } from '../../components/CountdownTimer';
@@ -12,7 +12,8 @@ import { logoutUser } from "../../store/collections/user";
 import { Modal } from '@mantine/core';
 import { createOrUpdateAnswer } from "../../store/thunks/answer";
 import { convertTimeToTimestamp } from "../../util/common";
-
+import spinner from "../../assets/spinner.svg"
+import { Image } from "@mantine/core"
 
 const useStyles = createStyles((theme) => ({
     section: {
@@ -55,19 +56,28 @@ const Exam = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [option, setOption] = useState("");
     const [status, setStatus] = useState(false);
-    const [countdown, setCountdown] = useState(convertTimeToTimestamp());
-    console.log(countdown)
+    const [loader, setLoader] = useState(false);
+    const [countdown, setCountdown] = useState(convertTimeToTimestamp({hours: 1, minutes: 30}));
+    // console.log(countdown);
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.account.user.data)
     const exam = useSelector((state: RootState) => state.account.question) as unknown as PaginatedQuestionState;
+    let total: number = 0;
+
     const fetchQuestionData = useCallback(async () => {
-        const payload = {
-            subject: subject,
-            page: 1,
+        if (!exam.data?.data) {
+            setLoader(true);
+            const payload = {
+                subject: subject,
+                page: currentPage || 1,
+            }
+            payload.page = currentPage
+            const resp = await store.dispatch(getQuestionsWithFilter(payload));
+            if (resp.meta.requestStatus === "fulfilled") {
+                setLoader(false);
+            }
         }
-        payload.page = currentPage
-        await dispatch(getQuestionsWithFilter(payload));
-    }, [currentPage, dispatch, subject]);
+    }, [currentPage, exam, subject]);
 
     const setCountdownHandler = (value: number) => {
         setCountdown(value);
@@ -77,23 +87,11 @@ const Exam = () => {
         setCurrentPage(page);
     }
 
-    let total: number = 0, data: IQuestion = {
-        id: "",
-        content: "",
-        answer: "",
-        subject: "",
-        images: [],
-        content_html: "",
-        subject_slug: "",
-        options: [],
-        exam_id: ""
-    };
-
-    if (exam.data) {
-        const payload = exam.data
-        data = payload.data
-        total = payload.total
-    }
+    // if (exam.data) {
+    const payload = exam.data
+    const data = payload.data
+    total = payload.total
+    // }
     const handleNextPage = () => {
         if (currentPage >= total) {
             setCurrentPage(total);
@@ -129,15 +127,16 @@ const Exam = () => {
             userId: user.id,
             examId: data.exam_id,
             opt: option,
-            timestamp: 0,
+            timestamp: countdown,
         };
+        console.log(answer)
         await dispatch(createOrUpdateAnswer(answer));
-    }, [data.exam_id, data.id, dispatch, option, user.id]);
+    }, [countdown, data, dispatch, option, user.id]);
 
     useEffect(() => {
         fetchQuestionData();
         setSubject(user.subjects[0].slug)
-        if(option) {
+        if (option) {
             updateAnswer();
         }
     }, [fetchQuestionData, option, updateAnswer, user.subjects])
@@ -166,8 +165,18 @@ const Exam = () => {
                         <Grid>
                             <Grid.Col span={8}>
                                 <div style={{ overflowY: "scroll", height: "500px", color: "#666" }}>
-                                    <h3>({currentPage})</h3>
-                                    <h1>{data && data.content}</h1>
+                                    {loader
+                                        ?
+                                        <Group position="center" mt={40}>
+                                            <Image width={"50px"} src={spinner} alt="Spinner animated image" />
+                                            <p>We're preparing the question for you.</p>
+                                        </Group>
+                                        :
+                                        <>
+                                            <h3>({currentPage})</h3>
+                                            <h1>{data && data.content}</h1>
+                                        </>
+                                    }
                                 </div>
                             </Grid.Col>
                             <Grid.Col span={4} >
