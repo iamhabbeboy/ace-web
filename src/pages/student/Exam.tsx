@@ -57,27 +57,28 @@ const Exam = () => {
     const [option, setOption] = useState("");
     const [status, setStatus] = useState(false);
     const [loader, setLoader] = useState(false);
-    const [countdown, setCountdown] = useState(convertTimeToTimestamp({hours: 1, minutes: 30}));
+    const [countdown, setCountdown] = useState(convertTimeToTimestamp({ hours: 1, minutes: 30 }));
     // console.log(countdown);
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.account.user.data)
     const exam = useSelector((state: RootState) => state.account.question) as unknown as PaginatedQuestionState;
     let total: number = 0;
+    const payload = exam.data
+    const data = payload.data
+    total = payload.total;
 
     const fetchQuestionData = useCallback(async () => {
-        if (!exam.data?.data) {
-            setLoader(true);
-            const payload = {
-                subject: subject,
-                page: currentPage || 1,
-            }
-            payload.page = currentPage
-            const resp = await store.dispatch(getQuestionsWithFilter(payload));
-            if (resp.meta.requestStatus === "fulfilled") {
-                setLoader(false);
-            }
+        setLoader(true);
+        const payload = {
+            subject: subject,
+            page: currentPage || 1,
         }
-    }, [currentPage, exam, subject]);
+        payload.page = currentPage
+        const resp = await store.dispatch(getQuestionsWithFilter(payload));
+        if (resp.meta.requestStatus === "fulfilled") {
+            setLoader(false);
+        }
+    }, [currentPage, subject]);
 
     const setCountdownHandler = (value: number) => {
         setCountdown(value);
@@ -88,15 +89,13 @@ const Exam = () => {
     }
 
     // if (exam.data) {
-    const payload = exam.data
-    const data = payload.data
-    total = payload.total
     // }
     const handleNextPage = () => {
         if (currentPage >= total) {
             setCurrentPage(total);
         } else {
             setCurrentPage(currentPage + 1)
+            fetchQuestionData();
         }
     }
     const handlePreSignOut = async () => {
@@ -134,12 +133,14 @@ const Exam = () => {
     }, [countdown, data, dispatch, option, user.id]);
 
     useEffect(() => {
-        fetchQuestionData();
+        if (!exam.data?.data) {
+            fetchQuestionData();
+        }
         setSubject(user.subjects[0].slug)
         if (option) {
             updateAnswer();
         }
-    }, [fetchQuestionData, option, updateAnswer, user.subjects])
+    }, [exam, fetchQuestionData, option, updateAnswer, user.subjects])
 
     return (
         <Container size={"xl"}>
